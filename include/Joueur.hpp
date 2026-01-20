@@ -1,8 +1,9 @@
-#ifndef JOUEUR_HPP
-#define JOUEUR_HPP
+#pragma once
+
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "Pion.hpp"
 #include "Plateau.hpp"
 
@@ -35,5 +36,3 @@ public:
     virtual bool jouerCoup(Plateau* plateau) = 0;
 
 };
-
-#endif // JOUEUR_HPP

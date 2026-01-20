@@ -10,7 +10,7 @@ JoueurHumain::~JoueurHumain()
 }
 
 
-void JoueurHumain::jouerCoup(Plateau* plateau)
+bool JoueurHumain::jouerCoup(Plateau* plateau)
 {
 
     // Implémentation spécifique pour le joueur humain
@@ -46,7 +46,7 @@ void JoueurHumain::jouerCoup(Plateau* plateau)
     if(pionChoisi == nullptr)
     {
         cout << "Pion non disponible dans la main." << endl;
-        return;
+        return 0;
     }
     retirerPionDeMain(pionChoisi);
     cout << "Pion choisi: Taille " << pionChoisi->getTaille()
@@ -64,6 +64,5 @@ void JoueurHumain::jouerCoup(Plateau* plateau)
         cout << "Placement du pion échoué. Réessayez." << endl;
         main.push_back(pionChoisi); // Remettre le pion dans la main en cas d'échec
     }
-    
-    
+    return 0;
 }
