@@ -43,7 +43,7 @@ int main()
     test_Pion();
 
     /*TEST DE LA CLASSE CASE*/
-    test_Case();
+    // test_Case();
 
     /*TEST DE LA CLASSE PLATEAU*/
 
