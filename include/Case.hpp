@@ -31,13 +31,13 @@ public:
     bool placerPion(Pion *pion);
 
     // Retire et renvoie le pion de taille t (nullptr si vide).
-    bool retirerPion(Taille taille);
+    Pion *retirerPion(Taille taille);
 
     // Renvoie le pion de taille t (nullptr si vide).
     Pion *getPion(Taille taille) const;
 
     // True si l’emplacement t est vide.
-    bool estVide() const;
+    bool estVide(Taille taille) const;
 
     // True si la case contient un empilement complet (3 tailles) d’une même couleur.
     bool aEmpilement() const;

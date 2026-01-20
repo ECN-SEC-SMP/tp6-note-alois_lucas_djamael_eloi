@@ -74,13 +74,14 @@ Pion *Case::getPion(Taille t) const
     return emplacements[i]; // renvoyer le pion (ou nullptr)
 }
 
-// Renvoie le pion de taille t (nullptr si vide).
-bool Case::estVide() const
-{
-    return emplacements[0] == nullptr &&
-           emplacements[1] == nullptr &&
-           emplacements[2] == nullptr;
+bool Case::estVide(Taille t) const {
+    const int i = static_cast<int>(t);
+    if (i < 0 || i > 2) {
+        throw std::out_of_range("Taille invalide dans estVide(Taille)");
+    }
+    return emplacements[i] == nullptr;
 }
+
 
 // True si la case contient un empilement complet (3 tailles) d’une même couleur.
 bool Case::aEmpilement() const

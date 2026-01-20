@@ -15,14 +15,16 @@
 
 #include <iostream>
 #include <vector>
+#include <cassert>
 
-#include "Plateau.hpp"
-#include "Case.hpp"
-#include "Pion.hpp"
+//#include "Plateau.hpp"
+#include "case.hpp"
+#include "pion.hpp"
 
 using namespace std;
 
 // test de la classe Pion
+void test_Pion(void);
 
 // test de la classe Case
 void test_Case(void);
@@ -38,6 +40,7 @@ int main()
 {
 
     /*TEST DE LA CLASSE PION*/
+    test_Pion();
 
     /*TEST DE LA CLASSE CASE*/
     test_Case();
@@ -52,6 +55,26 @@ int main()
 }
 
 // test de la classe Pion
+void test_Pion(void)
+{
+    cout << "=== Tests Pion ===\n";
+
+    // 1) Création de pions
+    Pion p1(ROUGE, PETIT);
+    Pion p2(BLEU, MOYEN);
+    Pion p3(VERT, GRAND);
+
+    // 2) Vérification des attributs
+    assert(p1.getCouleur() == ROUGE && "p1 couleur doit etre ROUGE");
+    assert(p1.getTaille() == PETIT && "p1 taille doit etre PETIT");
+    assert(p2.getCouleur() == BLEU && "p2 couleur doit etre BLEU");
+    assert(p2.getTaille() == MOYEN && "p2 taille doit etre MOYEN");
+    assert(p3.getCouleur() == VERT && "p3 couleur doit etre VERT");
+    assert(p3.getTaille() == GRAND && "p3 taille doit etre GRAND");
+
+    cout << "OK: creation et verification des pions\n";
+    cout << "=== Test Pion FIN ===\n";
+}
 
 // test de la classe Case
 void test_Case(void)
