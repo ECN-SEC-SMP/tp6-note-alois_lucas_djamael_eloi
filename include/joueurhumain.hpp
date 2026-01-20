@@ -19,7 +19,7 @@ public:
     ~JoueurHumain();
 
     // Méthodes
-    void jouerCoup(Plateau* plateau) override;
+    bool jouerCoup(Plateau* plateau) override;
 
 };
 

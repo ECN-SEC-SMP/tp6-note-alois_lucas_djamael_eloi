@@ -10,7 +10,7 @@ JoueurHumain::~JoueurHumain()
 }
 
 
-void JoueurHumain::jouerCoup(Plateau* plateau)
+bool JoueurHumain::jouerCoup(Plateau* plateau)
 {
 
     // Implémentation spécifique pour le joueur humain
