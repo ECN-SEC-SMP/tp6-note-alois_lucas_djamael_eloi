@@ -9,7 +9,7 @@
  *
  */
 
-#include "plateau.hpp"
+#include "Plateau.hpp"
 
 Plateau::Plateau()
 {

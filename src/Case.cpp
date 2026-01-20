@@ -11,8 +11,8 @@
 
 #include <stdexcept>
 
-#include "case.hpp"
-#include "pion.hpp" // pour enum Taille, Couleur
+#include "Case.hpp"
+#include "Pion.hpp" // pour enum Taille, Couleur
 
 using namespace std;
 

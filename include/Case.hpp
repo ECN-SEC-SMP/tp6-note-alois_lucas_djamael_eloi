@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "pion.hpp" // doit définir Pion, Couleur, Taille
+#include "Pion.hpp" // doit définir Pion, Couleur, Taille
 #include <cstddef>  // nullptr
 
 using namespace std;

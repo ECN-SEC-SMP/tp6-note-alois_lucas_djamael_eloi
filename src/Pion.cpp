@@ -9,7 +9,7 @@
  *
  */
 
-#include "pion.hpp"
+#include "Pion.hpp"
 
 Pion::Pion(Couleur c, Taille t)
 {
