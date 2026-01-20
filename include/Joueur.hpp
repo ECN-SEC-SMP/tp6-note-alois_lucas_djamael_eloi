@@ -1,5 +1,5 @@
-#ifndef JOUEUR_HPP
-#define JOUEUR_HPP
+#pragma once
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -36,5 +36,3 @@ public:
     virtual bool jouerCoup(Plateau* plateau) = 0;
 
 };
-
-#endif // JOUEUR_HPP

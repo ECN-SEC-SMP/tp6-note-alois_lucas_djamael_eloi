@@ -1,7 +1,6 @@
-#ifndef JOUEURHUMAIN_HPP
-#define JOUEURHUMAIN_HPP
-#include "Joueur.hpp"
+#pragma once
 
+#include "Joueur.hpp"
 
 using namespace std;
 
@@ -22,5 +21,3 @@ public:
     bool jouerCoup(Plateau* plateau) override;
 
 };
-
-#endif // JOUEURHUMAIN_HPP
