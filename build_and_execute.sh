@@ -1,7 +1,7 @@
 #!/bin/bash
-make clean
-make all
-clear
-echo Execution du main :
-echo
-build/main.out
+rm -rf build
+mkdir -p build
+cd build
+cmake ..
+make
+./Otrio_Game

@@ -28,17 +28,7 @@ Lien github : https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi
 
 ## Compilation et Exécution
 
-### Méthode 1 : Utiliser make
-
-```bash
-# Compiler
-make
-
-# Exécuter
-./build/main.out
-```
-
-### Méthode 2 : Utiliser le script bash
+Utiliser le script bash :
 
 ```bash
 ./build_and_execute.sh
