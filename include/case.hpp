@@ -1,9 +1,9 @@
 #pragma once
 
-#include "pion.h"   // doit définir Pion, Couleur, Taille
+#include "pion.hpp"   // doit définir Pion, Couleur, Taille
 #include <cstddef>  // nullptr
 
-class case {
+class Case {
 private:
     // Tableau pour stocker les pions de différentes tailles sur la case
     Pion* emplacements[3]; // 0: petit, 1: moyen, 2: grand

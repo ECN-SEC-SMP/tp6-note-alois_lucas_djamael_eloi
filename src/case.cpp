@@ -1,4 +1,4 @@
-#include "case.h"
+#include "case.hpp"
 
 int Case::idx(Taille t) {
     switch (t) {
