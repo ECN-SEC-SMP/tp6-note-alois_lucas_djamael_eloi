@@ -7,6 +7,8 @@ SEC 2
 - Djamael Lahamion - <djamael.lahamion@eleves.ec-nantes.fr>
 - Aloïs Guillon - <alois.guillon@eleves.ec-nantes.fr>
 
+Lien github : https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi
+
 ## Table des matières
 
 1. [Organisation du groupe](#organisation-du-groupe)
