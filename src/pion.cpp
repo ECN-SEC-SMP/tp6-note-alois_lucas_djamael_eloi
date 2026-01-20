@@ -1,5 +1,5 @@
 /**
- * @file pion.cpp
+ * @file Pion.cpp
  * @author Aloïs GUILLON (alois.guillon@eleves.ec-nantes.fr)
  * @brief
  * @version 0.1

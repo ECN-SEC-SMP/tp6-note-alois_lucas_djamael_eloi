@@ -1,5 +1,5 @@
 /**
- * @file plateau.hpp
+ * @file Plateau.hpp
  * @author Eloi Tourangin (Eloi.Tourangin@eleves.ec-nantes.fr)
  * @brief
  * @version 0.1
@@ -27,7 +27,7 @@ private:
     bool verifierColonnes();
 
     bool verifierDiagonales();
-    
+
     bool verifierEmpilements();
 
 public:

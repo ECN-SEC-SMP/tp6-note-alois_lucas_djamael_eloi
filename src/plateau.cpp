@@ -1,12 +1,12 @@
 /**
- * @file plateau.cpp
+ * @file Plateau.cpp
  * @author Eloi Tourangin (Eloi.Tourangin@eleves.ec-nantes.fr)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 20-01-2026
- * 
+ *
  * @copyright Copyright (c) 2026
- * 
+ *
  */
 
 #include "plateau.hpp"

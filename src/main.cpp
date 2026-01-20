@@ -16,22 +16,22 @@
 #include <iostream>
 #include <vector>
 
-#include "Case.h"
-#include "Pion.h"
+#include "Plateau.hpp"
+#include "Case.hpp"
+#include "Pion.hpp"
 
 using namespace std;
 
+// test de la classe Pion
 
-//test de la classe Pion
-
-//test de la classe Case
+// test de la classe Case
 void test_Case(void);
 
-//test de la classe Plateau
+// test de la classe Plateau
 
-//test de la classe Joueur
+// test de la classe Joueur
 
-//test de la classe Otrio
+// test de la classe Otrio
 
 // FICHIER PRINCIPAL DE TEST DES DIFFERENTES CLASSES (JEUX DESSAI)- A MODIFIER SELON VOS BESOINS
 int main()
@@ -48,14 +48,14 @@ int main()
 
     /*TEST DE LA CLASSE OTRIO*/
 
-
     return 0;
 }
 
-//test de la classe Pion
+// test de la classe Pion
 
-//test de la classe Case
-void test_Case(void) {
+// test de la classe Case
+void test_Case(void)
+{
     cout << "=== Tests Case ===\n";
 
     // 1) Trois pions (couleur: VERT)
@@ -86,7 +86,7 @@ void test_Case(void) {
     cout << "OK: getPion\n";
 
     // 7) Supprimer le moyen
-    Pion* ret = c.retirerPion(MOYEN);
+    Pion *ret = c.retirerPion(MOYEN);
     assert(ret == &pMoyen && "retirerPion(MOYEN) doit renvoyer pMoyen");
     cout << "OK: retrait MOYEN\n";
 
@@ -106,8 +106,8 @@ void test_Case(void) {
     cout << "=== Test Case FIN ===\n";
 }
 
-//test de la classe Plateau
+// test de la classe Plateau
 
-//test de la classe Joueur
+// test de la classe Joueur
 
-//test de la classe Otrio
+// test de la classe Otrio
