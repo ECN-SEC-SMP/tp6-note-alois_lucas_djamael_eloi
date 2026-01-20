@@ -1,6 +1,6 @@
 #ifndef JOUEURHUMAIN_HPP
 #define JOUEURHUMAIN_HPP
-#include "joueur.hpp"
+#include "Joueur.hpp"
 
 
 using namespace std;

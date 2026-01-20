@@ -1,4 +1,4 @@
-#include "joueurhumain.hpp"
+#include "JoueurHumain.hpp"
 
 JoueurHumain::JoueurHumain(string nom, Couleur couleur)
     : Joueur(nom, couleur)
@@ -15,7 +15,7 @@ void JoueurHumain::jouerCoup(Plateau* plateau)
 
     // Implémentation spécifique pour le joueur humain
     cout << "C'est au tour de " << nom << " de jouer." << endl;
-    
+
     // Afficher les pions disponibles pour le joueur
     for(Pion* p : main)
     {
