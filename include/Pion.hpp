@@ -33,7 +33,7 @@ private:
     Taille taille;
 
 public:
-    Pion(Couleur, Taille);
+    Pion(Couleur couleur, Taille taille);
 
     Couleur getCouleur();
 
