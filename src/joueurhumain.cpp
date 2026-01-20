@@ -15,11 +15,13 @@ void JoueurHumain::jouerCoup(Plateau* plateau)
 
     // Implémentation spécifique pour le joueur humain
     cout << "C'est au tour de " << nom << " de jouer." << endl;
-    // Logique pour que le joueur humain choisisse et joue un coup
+    
+    // Afficher les pions disponibles pour le joueur
     for(Pion* p : main)
     {
         cout << "Pion disponible: " << p->getTaille() << "; " << p->getCouleur() << endl;
     }
+
     // Implémentation de la sélection du pion par le joueur humain
     cout << "Sélectionner un pion à jouer." << endl;
     cout << "Indiquez la taille et la couleur du pion." << endl;
@@ -30,6 +32,8 @@ void JoueurHumain::jouerCoup(Plateau* plateau)
     cin >> couleurInput;
     Taille taille = static_cast<Taille>(tailleInput);
     Couleur couleur = static_cast<Couleur>(couleurInput);
+
+
     Pion* pionChoisi = nullptr;
     for(Pion* p : main)
     {
