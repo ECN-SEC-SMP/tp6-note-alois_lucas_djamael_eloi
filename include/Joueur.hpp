@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "pion.hpp"
-#include "plateau.hpp"
+#include "Pion.hpp"
+#include "Plateau.hpp"
 
 
 #define NB_PIONS_PAR_TAILLE 3
