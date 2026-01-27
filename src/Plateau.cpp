@@ -33,12 +33,12 @@ Case *Plateau::getCase(int x, int y)
     return &grille[y][x];
 }
 
-bool Plateau::verifierVictoire(Joueur* joueur)
+bool Plateau::verifierVictoire(Joueur* joueur) const
 {
     return verifierLignes(joueur) || verifierColonnes(joueur) || verifierDiagonales(joueur) || verifierEmpilements(joueur);
 }
 
-bool Plateau::verifierLignes(Joueur* joueur)
+bool Plateau::verifierLignes(Joueur* joueur) const
 { 
     for(int ligne = 0; ligne < 3; ++ligne)
     {
@@ -88,7 +88,7 @@ bool Plateau::verifierLignes(Joueur* joueur)
     
 }
 
-bool Plateau::verifierColonnes(Joueur* joueur)
+bool Plateau::verifierColonnes(Joueur* joueur) const
 {
     for(int colonne = 0; colonne < 3; ++colonne)
     {
@@ -138,7 +138,7 @@ bool Plateau::verifierColonnes(Joueur* joueur)
         }
 }
 
-bool Plateau::verifierDiagonales(Joueur* joueur)
+bool Plateau::verifierDiagonales(Joueur* joueur) const
 {
     if (!joueur) return false;
 
@@ -206,7 +206,7 @@ bool Plateau::verifierDiagonales(Joueur* joueur)
 
 
 
-bool Plateau::verifierEmpilements(Joueur* joueur)
+bool Plateau::verifierEmpilements(Joueur* joueur) const
 {
     if (!joueur) return false;
 

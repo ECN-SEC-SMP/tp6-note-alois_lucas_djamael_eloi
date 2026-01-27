@@ -7,6 +7,8 @@
 #include "Pion.hpp"
 #include "Plateau.hpp"
 
+class Plateau;
+
 
 #define NB_PIONS_PAR_TAILLE 3
 #define NB_GROUPES_PIONS    3

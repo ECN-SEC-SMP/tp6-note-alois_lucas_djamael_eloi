@@ -1,13 +1,12 @@
 #include "Otrio.hpp"
 
-Otrio::Otrio()
+Otrio::Otrio(void)
 {
     // Initialisation des 4 joueurs
-    joueurs = vector<Joueur>();
-    joueurs.push_back(Joueur("Player1", ROUGE));
-    joueurs.push_back(Joueur("Player2", BLEU));
-    joueurs.push_back(Joueur("Player3", VERT));
-    joueurs.push_back(Joueur("Player4", JAUNE));
+    joueurs.push_back(JoueurHumain("Player1", ROUGE));
+    joueurs.push_back(JoueurHumain("Player2", BLEU));
+    joueurs.push_back(JoueurHumain("Player3", VERT));
+    joueurs.push_back(JoueurHumain("Player4", JAUNE));
 
     // Initialisation du plateau
     plateau = Plateau();
@@ -43,7 +42,7 @@ void Otrio::initialiserPartie()
         }
         cout << " : ";
         cin >> nom;
-        joueur = Joueur(nom, joueur.getCouleur());
+        joueur = JoueurHumain(nom, joueur.getCouleur());
     }
 
     cout << "La partie peut commencer !" << endl;
@@ -122,7 +121,7 @@ bool Otrio::estFini() const
     // Vérification des conditions de victoire pour chaque joueur
     for (const auto& joueur : joueurs)
     {
-        if (plateau.verifierVictoire(joueur))
+        if(plateau.verifierVictoire(const_cast<JoueurHumain*>(&joueur)))
         {
             cout << "Le joueur " << joueur.getNom() << " a gagné la partie !" << endl;
             return true;
@@ -134,7 +133,7 @@ bool Otrio::estFini() const
 void Otrio::afficherEtatJeu() const
 {
     cout << "État actuel du plateau :" << endl;
-    plateau.afficher();
+    //plateau.afficher();
 
     cout << "État des joueurs :" << endl;
     for (const auto& joueur : joueurs)

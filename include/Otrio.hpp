@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Joueur.hpp"
+#include "Joueurhumain.hpp"
 #include "Plateau.hpp"
 
 using namespace std;
@@ -13,13 +14,13 @@ class Otrio
 {
 protected:
     Plateau plateau;
-    vector<Joueur> joueurs;
+    vector<JoueurHumain> joueurs;
     int joueurCourantIndex;
 
 public:
 
-    Otrio(const vector<Joueur>& joueurs);
-    ~Otrio() = default;
+    Otrio(void);
+    ~Otrio();
 
     void initialiserPartie();
     void lancerBoucleJeu();
