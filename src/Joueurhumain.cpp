@@ -1,4 +1,4 @@
-#include "JoueurHumain.hpp"
+#include "Joueurhumain.hpp"
 
 JoueurHumain::JoueurHumain(string nom, Couleur couleur)
     : Joueur(nom, couleur)

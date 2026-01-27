@@ -21,7 +21,8 @@ Lien github : https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi
 
 ### Répartition initiale 
 
-
+Diagramme de séquence
+Itération de jeu
 
 
 
