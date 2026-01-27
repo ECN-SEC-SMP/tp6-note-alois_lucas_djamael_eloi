@@ -39,13 +39,103 @@ bool Plateau::verifierVictoire(Joueur* joueur)
 }
 
 bool Plateau::verifierLignes(Joueur* joueur)
-{   
+{ 
+    for(int ligne = 0; ligne < 3; ++ligne)
+    {
+            Taille tailles[3];
+            bool valide = true;
+
+            // Pour chaque case de la ligne
+            for (int k = 0; k < 3; ++k)
+            {
+                Pion* pionTrouve = nullptr;
+
+                // Chercher un pion de la bonne couleur dans la case
+                for (int t = PETIT; t <= GRAND; ++t)
+                {
+                    Pion* p = grille[ligne][k].getPion(static_cast<Taille>(t));
+                    if (p && p->getCouleur() == joueur->getCouleur())
+                    {
+                        pionTrouve = p;
+                        break;
+                    }
+                }
+
+                if (!pionTrouve)
+                {
+                    valide = false;
+                    break;
+                }
+
+                tailles[k] = pionTrouve->getTaille();
+            }
+
+            if (!valide)
+                continue;
+
+            // Cas 1 : tailles identiques
+            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
+                return true;
+
+            // Cas 2 : tailles strictement croissantes
+            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
+                return true;
+
+            // Cas 3 : tailles strictement décroissantes
+            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
+                return true;
+    }
     
 }
 
 bool Plateau::verifierColonnes(Joueur* joueur)
 {
-    return true;
+    for(int colonne = 0; colonne < 3; ++colonne)
+    {
+
+            Taille tailles[3];
+            bool valide = true;
+
+            // Pour chaque case de la colonne
+            for (int k = 0; k < 3; ++k)
+            {
+                Pion* pionTrouve = nullptr;
+
+                // Chercher un pion de la bonne couleur dans la case
+                for (int t = PETIT; t <= GRAND; ++t)
+                {
+                    Pion* p = grille[k][colonne].getPion(static_cast<Taille>(t));
+                    if (p && p->getCouleur() == joueur->getCouleur())
+                    {
+                        pionTrouve = p;
+                        break;
+                    }
+                }
+
+                if (!pionTrouve)
+                {
+                    valide = false;
+                    break;
+                }
+
+                tailles[k] = pionTrouve->getTaille();
+            }
+
+            if (!valide)
+                continue;
+
+            // Cas 1 : tailles identiques
+            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
+                return true;
+
+            // Cas 2 : tailles strictement croissantes
+            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
+                return true;
+
+            // Cas 3 : tailles strictement décroissantes
+            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
+                return true;
+        }
 }
 
 bool Plateau::verifierDiagonales(Joueur* joueur)
