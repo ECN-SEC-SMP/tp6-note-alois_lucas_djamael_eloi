@@ -43,7 +43,7 @@ int main()
     test_Pion();
 
     /*TEST DE LA CLASSE CASE*/
-    // test_Case();
+    test_Case();
 
     /*TEST DE LA CLASSE PLATEAU*/
 
@@ -83,8 +83,8 @@ void test_Case(void)
 
     // 1) Trois pions (couleur: VERT)
     Pion pPetit(VERT, PETIT);
-    Pion pMoyen(VERT, MOYEN);
-    Pion pGrand(VERT, GRAND);
+    Pion pMoyen(ROUGE, MOYEN);
+    Pion pGrand(JAUNE, GRAND);
 
     // 2) Une case vide
     Case c;

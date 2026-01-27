@@ -7,6 +7,8 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 # Exclure temporairement les fichiers non terminés
 list(FILTER SOURCES EXCLUDE REGEX ".*/Plateau\\.cpp$")
+list(FILTER SOURCES EXCLUDE REGEX ".*/Joueur\\.cpp$")
+list(FILTER SOURCES EXCLUDE REGEX ".*/Joueurhumain\\.cpp$")
 
 add_executable(Otrio_Game ${SOURCES})
 target_include_directories(Otrio_Game PRIVATE include)
