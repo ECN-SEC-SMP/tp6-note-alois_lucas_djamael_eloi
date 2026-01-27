@@ -40,5 +40,5 @@ public:
     bool estVide(Taille taille) const;
 
     // True si la case contient un empilement complet (3 tailles) d’une même couleur.
-    bool aEmpilement() const;
+    bool aEmpilement(Joueur* joueur) const;
 };

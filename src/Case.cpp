@@ -13,6 +13,7 @@
 
 #include "Case.hpp"
 #include "Pion.hpp" // pour enum Taille, Couleur
+#include "Joueur.hpp"
 
 using namespace std;
 
@@ -84,7 +85,7 @@ bool Case::estVide(Taille t) const {
 
 
 // True si la case contient un empilement complet (3 tailles) d’une même couleur.
-bool Case::aEmpilement() const
+bool Case::aEmpilement(Joueur* joueur) const
 {
     // Si un des emplacements est vide, pas d'empilement complet
     if (emplacements[PETIT] == nullptr ||
@@ -95,7 +96,8 @@ bool Case::aEmpilement() const
     }
 
     // Vérifier si les couleurs des trois pions sont identiques
-    Couleur c = emplacements[PETIT]->getCouleur();
-    return (emplacements[MOYEN]->getCouleur() == c) &&
+    Couleur c = joueur->getCouleur();
+    return (emplacements[PETIT]->getCouleur() == c) &&
+           (emplacements[MOYEN]->getCouleur() == c) &&
            (emplacements[GRAND]->getCouleur() == c);
 }

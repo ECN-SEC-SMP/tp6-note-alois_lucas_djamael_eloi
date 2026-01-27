@@ -15,6 +15,7 @@
 #include <stdexcept>
 #include "Case.hpp"
 #include "Pion.hpp"
+#include "Joueur.hpp"
 
 using namespace std;
 
@@ -23,13 +24,13 @@ class Plateau
 private:
     vector<vector<Case>> grille;
 
-    bool verifierLignes();
+    bool verifierLignes(Joueur* joueur);
 
-    bool verifierColonnes();
+    bool verifierColonnes(Joueur* joueur);
 
-    bool verifierDiagonales();
+    bool verifierDiagonales(Joueur* joueur);
 
-    bool verifierEmpilements();
+    bool verifierEmpilements(Joueur* joueur);
 
 public:
     Plateau();
@@ -39,5 +40,5 @@ public:
 
     Case *getCase(int x, int y);
 
-    bool verifierVictoire();
+    bool verifierVictoire(Joueur* joueur);
 };

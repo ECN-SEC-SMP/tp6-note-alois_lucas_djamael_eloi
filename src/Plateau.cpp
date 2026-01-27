@@ -33,27 +33,99 @@ Case *Plateau::getCase(int x, int y)
     return &grille[y][x];
 }
 
-bool Plateau::verifierVictoire()
+bool Plateau::verifierVictoire(Joueur* joueur)
 {
-    return verifierLignes() || verifierColonnes() || verifierDiagonales() || verifierEmpilements();
+    return verifierLignes(joueur) || verifierColonnes(joueur) || verifierDiagonales(joueur) || verifierEmpilements(joueur);
 }
 
-bool Plateau::verifierLignes()
+bool Plateau::verifierLignes(Joueur* joueur)
 {   
     
 }
 
-bool Plateau::verifierColonnes()
+bool Plateau::verifierColonnes(Joueur* joueur)
 {
     return true;
 }
 
-bool Plateau::verifierDiagonales()
+bool Plateau::verifierDiagonales(Joueur* joueur)
 {
-    return true;
+    // Coordonnées des deux diagonales
+    const int diagonales[2][3][2] = {
+        { {0,0}, {1,1}, {2,2} },
+        { {0,2}, {1,1}, {2,0} }
+    };
+
+    for (int d = 0; d < 2; ++d)
+    {
+        for (int c = ROUGE; c <= JAUNE; ++c)
+        {
+            Couleur couleur = static_cast<Couleur>(c);
+            Taille tailles[3];
+            bool valide = true;
+
+            // Pour chaque case de la diagonale
+            for (int k = 0; k < 3; ++k)
+            {
+                int x = diagonales[d][k][0];
+                int y = diagonales[d][k][1];
+
+                Pion* pionTrouve = nullptr;
+
+                // Chercher un pion de la bonne couleur dans la case
+                for (int t = PETIT; t <= GRAND; ++t)
+                {
+                    Pion* p = grille[x][y].getPion(static_cast<Taille>(t));
+                    if (p && p->getCouleur() == couleur)
+                    {
+                        pionTrouve = p;
+                        break;
+                    }
+                }
+
+                if (!pionTrouve)
+                {
+                    valide = false;
+                    break;
+                }
+
+                tailles[k] = pionTrouve->getTaille();
+            }
+
+            if (!valide)
+                continue;
+
+            // Cas 1 : tailles identiques
+            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
+                return true;
+
+            // Cas 2 : tailles strictement croissantes
+            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
+                return true;
+
+            // Cas 3 : tailles strictement décroissantes
+            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
+                return true;
+        }
+    }
+
+    return false;
 }
 
-bool Plateau::verifierEmpilements()
+
+
+
+bool Plateau::verifierEmpilements(Joueur* joueur)
 {
-    return true;
+    // on appelle aEmpilement sur chaque case du plateau
+    for (const auto& ligne : grille)
+    {
+        for (const auto& casePlateau : ligne)
+        {
+            if (casePlateau.aEmpilement(joueur))
+            {
+                return true;
+            }
+        }
+    }
 }
