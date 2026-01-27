@@ -20,6 +20,8 @@
 //#include "Plateau.hpp"
 #include "Case.hpp"
 #include "Pion.hpp"
+#include "Joueur.hpp"
+#include "Joueurhumain.hpp"
 
 using namespace std;
 
@@ -30,8 +32,10 @@ void test_Pion(void);
 void test_Case(void);
 
 // test de la classe Plateau
+void test_Plateau(void);
 
 // test de la classe Joueur
+void test_Joueur(void);
 
 // test de la classe Otrio
 
@@ -130,7 +134,45 @@ void test_Case(void)
 }
 
 // test de la classe Plateau
+void test_Plateau(void)
+{
+    cout << "=== Tests Plateau ===\n";
+
+    // Tests à implémenter
+
+    cout << "=== Test Plateau FIN ===\n";
+}
 
 // test de la classe Joueur
+void test_Joueur(void)
+{
+    cout << "=== Tests Joueur ===\n";
+
+    // 1) Création d'un joueur
+    JoueurHumain j("Alice", ROUGE);
+
+    // 2) Vérification des attributs
+    assert(j.getNom() == "Alice" && "Le nom du joueur doit etre Alice");
+    assert(j.getCouleur() == ROUGE && "La couleur du joueur doit etre ROUGE");
+
+    // 3) Vérification du nombre de pions dans la main
+    vector<Pion*> pionsRestants = j.getPionRestants();
+    assert(pionsRestants.size() == NB_GROUPES_PIONS * NB_PIONS_PAR_TAILLE && "Le joueur doit avoir le bon nombre de pions");
+
+    // 4) Retirer un pion de la main
+    Pion* pionARetirer = pionsRestants[0];
+    j.retirerPionDeMain(pionARetirer);
+    pionsRestants = j.getPionRestants();
+    assert(pionsRestants.size() == (NB_GROUPES_PIONS * NB_PIONS_PAR_TAILLE) - 1 && "Le joueur doit avoir un pion de moins apres retrait");
+
+    cout << "OK: creation et verification du joueur\n";
+    cout << "=== Test Joueur FIN ===\n";
+
+    // 5) Jouer un coup
+    // Note: Ce test nécessite une instance de Plateau valide
+    Plateau plateau;
+    bool coupJoue = j.jouerCoup(&plateau);
+
+}
 
 // test de la classe Otrio
