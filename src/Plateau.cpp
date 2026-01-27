@@ -140,6 +140,10 @@ bool Plateau::verifierColonnes(Joueur* joueur)
 
 bool Plateau::verifierDiagonales(Joueur* joueur)
 {
+    if (!joueur) return false;
+
+    Couleur couleur = joueur->getCouleur();
+
     // Coordonnées des deux diagonales
     const int diagonales[2][3][2] = {
         { {0,0}, {1,1}, {2,2} },
@@ -148,59 +152,56 @@ bool Plateau::verifierDiagonales(Joueur* joueur)
 
     for (int d = 0; d < 2; ++d)
     {
-        for (int c = ROUGE; c <= JAUNE; ++c)
+        Taille tailles[3];
+        bool valide = true;
+
+        // Pour chaque case de la diagonale
+        for (int k = 0; k < 3; ++k)
         {
-            Couleur couleur = static_cast<Couleur>(c);
-            Taille tailles[3];
-            bool valide = true;
+            int x = diagonales[d][k][0];
+            int y = diagonales[d][k][1];
 
-            // Pour chaque case de la diagonale
-            for (int k = 0; k < 3; ++k)
+            Pion* pionTrouve = nullptr;
+
+            // Chercher un pion de la bonne couleur dans la case (peu importe sa taille)
+            for (int t = PETIT; t <= GRAND; ++t)
             {
-                int x = diagonales[d][k][0];
-                int y = diagonales[d][k][1];
-
-                Pion* pionTrouve = nullptr;
-
-                // Chercher un pion de la bonne couleur dans la case
-                for (int t = PETIT; t <= GRAND; ++t)
+                Pion* p = grille[x][y].getPion(static_cast<Taille>(t));
+                if (p && p->getCouleur() == couleur)
                 {
-                    Pion* p = grille[x][y].getPion(static_cast<Taille>(t));
-                    if (p && p->getCouleur() == couleur)
-                    {
-                        pionTrouve = p;
-                        break;
-                    }
-                }
-
-                if (!pionTrouve)
-                {
-                    valide = false;
+                    pionTrouve = p;
                     break;
                 }
-
-                tailles[k] = pionTrouve->getTaille();
             }
 
-            if (!valide)
-                continue;
+            if (!pionTrouve)
+            {
+                valide = false;
+                break;
+            }
 
-            // Cas 1 : tailles identiques
-            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
-                return true;
-
-            // Cas 2 : tailles strictement croissantes
-            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
-                return true;
-
-            // Cas 3 : tailles strictement décroissantes
-            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
-                return true;
+            tailles[k] = pionTrouve->getTaille();
         }
+
+        if (!valide)
+            continue;
+
+        // Victoire : tailles identiques
+        if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
+            return true;
+
+        // Victoire : tailles strictement croissantes
+        if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
+            return true;
+
+        // Victoire : tailles strictement décroissantes
+        if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
+            return true;
     }
 
     return false;
 }
+
 
 
 
