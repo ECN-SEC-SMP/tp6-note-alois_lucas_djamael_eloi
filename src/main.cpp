@@ -52,6 +52,7 @@ int main()
     /*TEST DE LA CLASSE PLATEAU*/
 
     /*TEST DE LA CLASSE JOUEUR*/
+    test_Joueur();
 
     /*TEST DE LA CLASSE OTRIO*/
 
@@ -166,13 +167,14 @@ void test_Joueur(void)
     assert(pionsRestants.size() == (NB_GROUPES_PIONS * NB_PIONS_PAR_TAILLE) - 1 && "Le joueur doit avoir un pion de moins apres retrait");
 
     cout << "OK: creation et verification du joueur\n";
-    cout << "=== Test Joueur FIN ===\n";
 
     // 5) Jouer un coup
     // Note: Ce test nécessite une instance de Plateau valide
     Plateau plateau;
     bool coupJoue = j.jouerCoup(&plateau);
-
+    assert(coupJoue && "Le joueur doit pouvoir jouer un coup");
+    cout << "OK: jouerCoup\n";
+    cout << "=== Test Joueur FIN ===\n";
 }
 
 // test de la classe Otrio

@@ -39,8 +39,8 @@ bool Plateau::verifierVictoire()
 }
 
 bool Plateau::verifierLignes()
-{
-    return true;
+{   
+    
 }
 
 bool Plateau::verifierColonnes()
