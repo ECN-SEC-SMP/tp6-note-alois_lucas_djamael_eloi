@@ -12,6 +12,7 @@
 #pragma once
 
 #include "Pion.hpp" // doit définir Pion, Couleur, Taille
+#include "Joueur.hpp"
 #include <cstddef>  // nullptr
 
 using namespace std;
@@ -38,7 +39,4 @@ public:
 
     // True si l’emplacement t est vide.
     bool estVide(Taille taille) const;
-
-    // True si la case contient un empilement complet (3 tailles) d’une même couleur.
-    bool aEmpilement(Joueur* joueur) const;
 };

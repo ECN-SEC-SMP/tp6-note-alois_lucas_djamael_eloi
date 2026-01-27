@@ -82,22 +82,3 @@ bool Case::estVide(Taille t) const {
     }
     return emplacements[i] == nullptr;
 }
-
-
-// True si la case contient un empilement complet (3 tailles) d’une même couleur.
-bool Case::aEmpilement(Joueur* joueur) const
-{
-    // Si un des emplacements est vide, pas d'empilement complet
-    if (emplacements[PETIT] == nullptr ||
-        emplacements[MOYEN] == nullptr ||
-        emplacements[GRAND] == nullptr)
-    {
-        return false; // pas d'empilement
-    }
-
-    // Vérifier si les couleurs des trois pions sont identiques
-    Couleur c = joueur->getCouleur();
-    return (emplacements[PETIT]->getCouleur() == c) &&
-           (emplacements[MOYEN]->getCouleur() == c) &&
-           (emplacements[GRAND]->getCouleur() == c);
-}

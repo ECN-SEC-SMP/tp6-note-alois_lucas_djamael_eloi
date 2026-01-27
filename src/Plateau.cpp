@@ -208,15 +208,31 @@ bool Plateau::verifierDiagonales(Joueur* joueur)
 
 bool Plateau::verifierEmpilements(Joueur* joueur)
 {
-    // on appelle aEmpilement sur chaque case du plateau
+    if (!joueur) return false;
+
+    Couleur c = joueur->getCouleur();
+
     for (const auto& ligne : grille)
     {
         for (const auto& casePlateau : ligne)
         {
-            if (casePlateau.aEmpilement(joueur))
+            Pion* pPetit = casePlateau.getPion(PETIT);
+            Pion* pMoyen = casePlateau.getPion(MOYEN);
+            Pion* pGrand = casePlateau.getPion(GRAND);
+
+            // Il faut les 3 tailles présentes
+            if (!pPetit || !pMoyen || !pGrand)
+                continue;
+
+            // Et toutes de la couleur du joueur
+            if (pPetit->getCouleur() == c &&
+                pMoyen->getCouleur() == c &&
+                pGrand->getCouleur() == c)
             {
                 return true;
             }
         }
     }
+
+    return false;
 }
