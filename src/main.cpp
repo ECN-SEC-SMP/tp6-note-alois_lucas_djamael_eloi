@@ -16,10 +16,10 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
-
+    
 //#include "Plateau.hpp"
-#include "case.hpp"
-#include "pion.hpp"
+#include "Case.hpp"
+#include "Pion.hpp"
 
 using namespace std;
 
