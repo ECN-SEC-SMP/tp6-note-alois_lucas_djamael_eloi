@@ -12,6 +12,7 @@
 #pragma once
 
 #include <vector>
+#include <stdexcept>
 #include "Case.hpp"
 #include "Pion.hpp"
 
