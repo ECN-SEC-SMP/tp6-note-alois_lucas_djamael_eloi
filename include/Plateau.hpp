@@ -15,7 +15,8 @@
 #include <stdexcept>
 #include "Case.hpp"
 #include "Pion.hpp"
-#include "Joueur.hpp"
+//#include "Joueur.hpp"
+class Joueur;
 
 using namespace std;
 

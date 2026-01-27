@@ -13,7 +13,6 @@
 
 #include "Case.hpp"
 #include "Pion.hpp" // pour enum Taille, Couleur
-#include "Joueur.hpp"
 
 using namespace std;
 

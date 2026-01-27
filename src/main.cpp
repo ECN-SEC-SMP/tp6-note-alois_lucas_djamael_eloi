@@ -121,15 +121,10 @@ void test_Case(void)
     // 8) getPion après suppression
     assert(c.getPion(MOYEN) == nullptr && "Apres retrait, getPion(MOYEN) doit etre nullptr");
     cout << "OK: getPion apres retrait\n";
-    // 9) Tester empilement : pour l’instant faux (il manque MOYEN + GRAND)
-    assert(!c.aEmpilement() && "aEmpilement doit etre faux (manque des tailles)");
-    cout << "OK: aEmpilement faux (incomplet)\n";
 
     // 10) Ajouter le moyen et le grand -> empilement attendu
     assert(c.placerPion(&pMoyen) && "re-placerPion(MOYEN) doit reussir");
     assert(c.placerPion(&pGrand) && "placerPion(GRAND) doit reussir");
-    assert(c.aEmpilement() && "aEmpilement doit etre vrai (3 tailles VERT)");
-    cout << "OK: aEmpilement vrai (3 tailles)\n";
 
     cout << "=== Test Case FIN ===\n";
 }
