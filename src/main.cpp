@@ -83,8 +83,8 @@ void test_Case(void)
 
     // 1) Trois pions (couleur: VERT)
     Pion pPetit(VERT, PETIT);
-    Pion pMoyen(ROUGE, MOYEN);
-    Pion pGrand(JAUNE, GRAND);
+    Pion pMoyen(VERT, MOYEN);
+    Pion pGrand(VERT, GRAND);
 
     // 2) Une case vide
     Case c;
