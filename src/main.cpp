@@ -50,6 +50,7 @@ int main()
     test_Case();
 
     /*TEST DE LA CLASSE PLATEAU*/
+    test_Plateau();
 
     /*TEST DE LA CLASSE JOUEUR*/
     test_Joueur();
@@ -135,6 +136,12 @@ void test_Plateau(void)
     cout << "=== Tests Plateau ===\n";
 
     Plateau plateau;
+    plateau.afficher();
+
+    plateau.placerPion(0, 0, new Pion(ROUGE, PETIT));
+    plateau.placerPion(0, 0, new Pion(ROUGE, MOYEN));
+    plateau.placerPion(1, 2, new Pion(BLEU, GRAND));
+    plateau.afficher();
 
     // Tests à implémenter
 
@@ -171,6 +178,7 @@ void test_Joueur(void)
     bool coupJoue = j.jouerCoup(&plateau);
     assert(coupJoue && "Le joueur doit pouvoir jouer un coup");
     cout << "OK: jouerCoup\n";
+    plateau.afficher();
     cout << "=== Test Joueur FIN ===\n";
 }
 

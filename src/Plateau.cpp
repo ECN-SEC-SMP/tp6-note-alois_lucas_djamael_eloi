@@ -236,3 +236,58 @@ bool Plateau::verifierEmpilements(Joueur* joueur) const
 
     return false;
 }
+
+static char couleurToChar(Couleur c)
+{
+    switch (c)
+    {
+        case ROUGE:  return 'R';
+        case VERT:   return 'V';
+        case BLEU:   return 'B';
+        case JAUNE:  return 'I';
+        default:     return '?';
+    }
+}
+
+void Plateau::afficher() const
+{
+    cout << "\n=== PLATEAU ===\n";
+    cout << "y\\x  0        1        2\n";
+
+    for (int y = 0; y < 3; ++y)
+    {
+        cout << y << "   ";
+        for (int x = 0; x < 3; ++x)
+        {
+            const Case& c = grille[y][x];
+
+            cout << "[";
+
+            // PETIT
+            if (c.getPion(PETIT))
+                cout << "p" << couleurToChar(c.getPion(PETIT)->getCouleur());
+            else
+                cout << "..";
+
+            cout << " ";
+
+            // MOYEN
+            if (c.getPion(MOYEN))
+                cout << "m" << couleurToChar(c.getPion(MOYEN)->getCouleur());
+            else
+                cout << "..";
+
+            cout << " ";
+
+            // GRAND
+            if (c.getPion(GRAND))
+                cout << "g" << couleurToChar(c.getPion(GRAND)->getCouleur());
+            else
+                cout << "..";
+
+            cout << "] ";
+        }
+        cout << '\n';
+    }
+    cout << "==============\n";
+}

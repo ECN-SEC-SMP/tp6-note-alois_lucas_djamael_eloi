@@ -33,6 +33,8 @@ private:
 
     bool verifierEmpilements(Joueur* joueur) const;
 
+    
+
 public:
     Plateau();
     ~Plateau() = default;
@@ -42,4 +44,5 @@ public:
     Case *getCase(int x, int y);
 
     bool verifierVictoire(Joueur* joueur) const;
+    void afficher() const;
 };

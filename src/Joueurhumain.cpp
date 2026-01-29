@@ -58,8 +58,8 @@ bool JoueurHumain::jouerCoup(Plateau* plateau)
         }
     }
 
-    cout << "Pion choisi: Taille " << (int)pionChoisi->getTaille()
-         << ", Couleur " << (int)pionChoisi->getCouleur() << "\n";
+    cout << "Pion choisi: Taille " << (string)pionChoisi->getTailleStr()
+         << ", Couleur " << (string)pionChoisi->getCouleurStr() << "\n";
 
     // 2) Choix de la case (boucle jusqu'au placement valide)
     while (true)
