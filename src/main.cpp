@@ -22,6 +22,7 @@
 #include "Pion.hpp"
 #include "Joueur.hpp"
 #include "Joueurhumain.hpp"
+#include "Otrio.hpp"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ void test_Plateau_v1(void);
 void test_Joueur(void);
 
 // test de la classe Otrio
+void test_Otrio(void);
 
 // FICHIER PRINCIPAL DE TEST DES DIFFERENTES CLASSES (JEUX DESSAI)- A MODIFIER SELON VOS BESOINS
 int main()
@@ -57,6 +59,7 @@ int main()
     test_Joueur();
 
     /*TEST DE LA CLASSE OTRIO*/
+    test_Otrio();
 
     return 0;
 }
@@ -311,3 +314,13 @@ void test_Joueur(void)
 }
 
 // test de la classe Otrio
+void test_Otrio(void)
+{
+    cout << "\n=== Tests Otrio ===\n";
+
+    Otrio game;
+    game.initialiserPartie();
+    game.lancerBoucleJeu();
+
+    cout << "=== Test Otrio FIN ===\n\n";
+}
