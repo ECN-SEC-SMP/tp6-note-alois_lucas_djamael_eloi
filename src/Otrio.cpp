@@ -133,7 +133,7 @@ bool Otrio::estFini() const
 void Otrio::afficherEtatJeu() const
 {
     cout << "État actuel du plateau :" << endl;
-    //plateau.afficher();
+    plateau.afficher();
 
     cout << "État des joueurs :" << endl;
     for (const auto& joueur : joueurs)
