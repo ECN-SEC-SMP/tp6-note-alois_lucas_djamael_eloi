@@ -12,77 +12,81 @@ JoueurHumain::~JoueurHumain()
 
 bool JoueurHumain::jouerCoup(Plateau* plateau)
 {
+    cout << "C'est au tour de " << nom << " de jouer.\n";
 
-    // Implémentation spécifique pour le joueur humain
-    cout << "C'est au tour de " << nom << " de jouer." << endl;
-
-    // Affichage des pions disponibles pour le joueur
-    for(Pion* p : main)
+    // Afficher la main (utile au debug)
+    for (Pion* p : main)
     {
-        cout << "Pion disponible: " << p->getTaille() << "; " << p->getCouleur() << endl;
+        cout << "Pion disponible: Taille=" << (int)p->getTaille()
+             << " Couleur=" << (int)p->getCouleur() << "\n";
     }
 
-    // Sélection du pion par le joueur humain
-    cout << "Sélectionner un pion à jouer." << endl;
-    cout << "Indiquez la taille et la couleur du pion." << endl;
+    // Le joueur humain ne joue que sa couleur
+    Couleur couleur = static_cast<Couleur>(this->couleur);
 
-    int tailleInput, couleurInput;
-
-    cout << "Taille (0: PETIT, 1: MOYEN, 2: GRAND): ";
-    cin >> tailleInput;
-    cout << "Couleur (0: ROUGE, 1: VERT, 2: BLEU, 3: JAUNE): ";
-    cin >> couleurInput;
-
-    if(tailleInput < 0 || tailleInput > 2 )
-    {
-        cout << "Entrée invalide pour la taille." << endl;
-        throw invalid_argument("jouerCoup: Entrée invalide pour la taille.");
-        return false;
-    }
-    if(couleurInput < 0 || couleurInput > 3 )
-    {
-        cout << "Entrée invalide pour la couleur." << endl;
-        throw invalid_argument("jouerCoup: Entrée invalide pour la couleur.");
-        return false;
-    }
-    
-    // Conversion des entrées en enums
-    Taille taille = static_cast<Taille>(tailleInput);
-    Couleur couleur = static_cast<Couleur>(couleurInput);
-
-    // Création d'un pointeur vers le pion choisi
+    // 1) Choix du pion (boucle jusqu'à choix valide)
     Pion* pionChoisi = nullptr;
-    for(Pion* p : main)
+    while (pionChoisi == nullptr)
     {
-        if(p->getTaille() == taille && p->getCouleur() == couleur)
+        int tailleInput;
+        cout << "Taille (0: PETIT, 1: MOYEN, 2: GRAND): ";
+        if (!(cin >> tailleInput))
         {
-            pionChoisi = p;
-            break;
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Entrée invalide (non numérique). Réessayez.\n";
+            continue;
+        }
+
+        if (tailleInput < 0 || tailleInput > 2)
+        {
+            cout << "Entrée invalide pour la taille. Réessayez.\n";
+            continue;
+        }
+
+        Taille taille = static_cast<Taille>(tailleInput);
+
+        // Chercher un pion correspondant dans la main
+        for (Pion* p : main)
+        {
+            if (p->getTaille() == taille && p->getCouleur() == couleur)
+            {
+                pionChoisi = p;
+                break;
+            }
+        }
+
+        if (pionChoisi == nullptr)
+        {
+            cout << "Pion non disponible dans la main. Réessayez.\n";
         }
     }
 
-    if(pionChoisi == nullptr)
-    {
-        cout << "Pion non disponible dans la main." << endl;
-        throw invalid_argument("jouerCoup: Pion non disponible dans la main.");
-        return false;
-    }
-    retirerPionDeMain(pionChoisi);
-    cout << "Pion choisi: Taille " << pionChoisi->getTaille()
-            << ", Couleur " << pionChoisi->getCouleur() << endl;    
-    int x, y;
-    cout << "Indiquez les coordonnées (x y) pour placer le pion: ";
-    cin >> x >> y;
+    cout << "Pion choisi: Taille " << (int)pionChoisi->getTaille()
+         << ", Couleur " << (int)pionChoisi->getCouleur() << "\n";
 
-    if(plateau->placerPion(x, y, pionChoisi))
+    // 2) Choix de la case (boucle jusqu'au placement valide)
+    while (true)
     {
-        cout << "Pion placé en (" << x << ", " << y << ")." << endl;
+        int x, y;
+        cout << "Indiquez les coordonnées (x y) pour placer le pion: ";
+        if (!(cin >> x >> y))
+        {
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cout << "Entrée invalide (non numérique). Réessayez.\n";
+            continue;
+        }
+
+        // Tenter de placer SANS retirer de la main avant validation
+        if (plateau->placerPion(x, y, pionChoisi))
+        {
+            // Maintenant seulement on retire de la main
+            retirerPionDeMain(pionChoisi);
+            cout << "Pion placé en (" << x << ", " << y << ").\n";
+            return true;
+        }
+
+        cout << "Placement échoué (case occupée / hors plateau / taille déjà prise...). Réessayez.\n";
     }
-    else
-    {
-        cout << "Placement du pion échoué. Réessayez." << endl;
-        main.push_back(pionChoisi); // Remettre le pion dans la main en cas d'échec
-        return false;
-    }
-    return true;
 }

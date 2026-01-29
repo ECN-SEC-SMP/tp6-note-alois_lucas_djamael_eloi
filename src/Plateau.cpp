@@ -13,20 +13,20 @@
 
 Plateau::Plateau()
 {
+    grille = vector<vector<Case>>(3, vector<Case>(3));
 }
 
 bool Plateau::placerPion(int x, int y, Pion *p)
 {
-    // verifier si la case est valide et placer le pion
-    if (x < 0 || x >= this->grille.size() || y < 0 || y >= this->grille.size())
-    {
+    if (!p) return false;
+
+    // x = colonne, y = ligne
+    if (x < 0 || x >= 3 || y < 0 || y >= 3)
         return false;
-        throw invalid_argument("placerPion: coordonnées de case invalides.");
-    }
-    
-    bool placed = this->grille[y][x].placerPion(p);
-    return placed;
+
+    return grille[y][x].placerPion(p);
 }
+
 
 Case *Plateau::getCase(int x, int y)
 {
