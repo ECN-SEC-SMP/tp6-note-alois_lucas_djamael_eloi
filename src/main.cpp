@@ -134,6 +134,8 @@ void test_Plateau(void)
 {
     cout << "=== Tests Plateau ===\n";
 
+    Plateau plateau;
+
     // Tests à implémenter
 
     cout << "=== Test Plateau FIN ===\n";

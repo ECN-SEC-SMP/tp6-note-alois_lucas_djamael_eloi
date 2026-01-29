@@ -26,3 +26,26 @@ Taille Pion::getTaille()
 {
     return this->taille;
 }
+
+string Pion::getTailleStr() const
+{
+    switch (taille)
+    {
+        case PETIT:  return "PETIT";
+        case MOYEN:  return "MOYEN";
+        case GRAND:  return "GRAND";
+        default:     return "INCONNU";
+    }
+}
+
+string Pion::getCouleurStr() const
+{
+    switch (couleur)
+    {
+        case ROUGE:  return "ROUGE";
+        case VERT:   return "VERT";
+        case BLEU:   return "BLEU";
+        case JAUNE: return "JAUNE";
+        default:     return "INCONNUE";
+    }
+}

@@ -34,6 +34,7 @@ public:
     vector<Pion*> getPionRestants() const;
     
     // Méthodes
+    void afficherMain() const;
     void retirerPionDeMain(Pion* p);
     virtual bool jouerCoup(Plateau* plateau) = 0;
 

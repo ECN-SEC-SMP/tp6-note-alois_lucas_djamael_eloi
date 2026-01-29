@@ -10,7 +10,9 @@
  */
 
 #pragma once
+#include <string>
 
+using namespace std;
 enum Couleur
 {
     ROUGE,
@@ -38,4 +40,7 @@ public:
     Couleur getCouleur();
 
     Taille getTaille();
+    string getTailleStr() const;
+    string getCouleurStr() const;
+
 };

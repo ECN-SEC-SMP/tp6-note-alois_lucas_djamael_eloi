@@ -14,12 +14,8 @@ bool JoueurHumain::jouerCoup(Plateau* plateau)
 {
     cout << "C'est au tour de " << nom << " de jouer.\n";
 
-    // Afficher la main (utile au debug)
-    for (Pion* p : main)
-    {
-        cout << "Pion disponible: Taille=" << (int)p->getTaille()
-             << " Couleur=" << (int)p->getCouleur() << "\n";
-    }
+    // Afficher la main
+    afficherMain();
 
     // Le joueur humain ne joue que sa couleur
     Couleur couleur = static_cast<Couleur>(this->couleur);
@@ -33,7 +29,7 @@ bool JoueurHumain::jouerCoup(Plateau* plateau)
         if (!(cin >> tailleInput))
         {
             cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Entrée invalide (non numérique). Réessayez.\n";
             continue;
         }
@@ -73,7 +69,7 @@ bool JoueurHumain::jouerCoup(Plateau* plateau)
         if (!(cin >> x >> y))
         {
             cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             cout << "Entrée invalide (non numérique). Réessayez.\n";
             continue;
         }

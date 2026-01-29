@@ -28,6 +28,24 @@ Couleur Joueur::getCouleur() const
     return couleur;
 }
 
+void Joueur::afficherMain() const
+{
+    cout << "Pions disponibles de " << nom << " :\n";
+
+    if (main.empty())
+    {
+        cout << "  (aucun pion)\n";
+        return;
+    }
+
+    for (const Pion* p : main)
+    {
+        cout << "  - Taille: " << p->getTailleStr()
+             << ", Couleur: " << p->getCouleurStr() << '\n';
+    }
+}
+
+
 vector<Pion*> Joueur::getPionRestants() const
 {
     return main;
