@@ -121,7 +121,7 @@ bool Otrio::estFini() const
     // Vérification des conditions de victoire pour chaque joueur
     for (const auto& joueur : joueurs)
     {
-        if(plateau.verifierVictoire(const_cast<JoueurHumain*>(&joueur)))
+        if(plateau.verifierVictoire(joueur.getCouleur()))
         {
             cout << "Le joueur " << joueur.getNom() << " a gagné la partie !" << endl;
             return true;

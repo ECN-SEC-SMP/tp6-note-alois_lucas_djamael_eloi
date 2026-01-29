@@ -1,22 +1,17 @@
 /**
  * @file Plateau.hpp
- * @author Eloi Tourangin (Eloi.Tourangin@eleves.ec-nantes.fr)
+ * @author Eloi Tourangin
  * @brief
  * @version 0.1
  * @date 20-01-2026
- *
- * @copyright Copyright (c) 2026
- *
  */
 
 #pragma once
 
 #include <vector>
-#include <stdexcept>
+#include <iostream>
 #include "Case.hpp"
 #include "Pion.hpp"
-#include "Joueur.hpp"
-class Joueur;
 
 using namespace std;
 
@@ -25,24 +20,19 @@ class Plateau
 private:
     vector<vector<Case>> grille;
 
-    bool verifierLignes(Joueur* joueur) const;
-
-    bool verifierColonnes(Joueur* joueur) const;
-
-    bool verifierDiagonales(Joueur* joueur) const;
-
-    bool verifierEmpilements(Joueur* joueur) const;
-
-    
+    bool verifierLignes(Couleur couleur) const;
+    bool verifierColonnes(Couleur couleur) const;
+    bool verifierDiagonales(Couleur couleur) const;
+    bool verifierEmpilements(Couleur couleur) const;
 
 public:
     Plateau();
     ~Plateau() = default;
 
     bool placerPion(int x, int y, Pion *p);
-
     Case *getCase(int x, int y);
 
-    bool verifierVictoire(Joueur* joueur) const;
+    bool verifierVictoire(Couleur couleur) const;
+
     void afficher() const;
 };

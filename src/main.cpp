@@ -33,6 +33,7 @@ void test_Case(void);
 
 // test de la classe Plateau
 void test_Plateau(void);
+void test_Plateau_v1(void);
 
 // test de la classe Joueur
 void test_Joueur(void);
@@ -79,13 +80,13 @@ void test_Pion(void)
     assert(p3.getTaille() == GRAND && "p3 taille doit etre GRAND");
 
     cout << "OK: creation et verification des pions\n";
-    cout << "=== Test Pion FIN ===\n";
+    cout << "=== Test Pion FIN ===\n\n";
 }
 
 // test de la classe Case
 void test_Case(void)
 {
-    cout << "=== Tests Case ===\n";
+    cout << "\n=== Tests Case ===\n";
 
     // 1) Trois pions (couleur: VERT)
     Pion pPetit(VERT, PETIT);
@@ -127,13 +128,13 @@ void test_Case(void)
     assert(c.placerPion(&pMoyen) && "re-placerPion(MOYEN) doit reussir");
     assert(c.placerPion(&pGrand) && "placerPion(GRAND) doit reussir");
 
-    cout << "=== Test Case FIN ===\n";
+    cout << "=== Test Case FIN ===\n\n";
 }
 
 // test de la classe Plateau
-void test_Plateau(void)
+void test_Plateau_v1(void)
 {
-    cout << "=== Tests Plateau ===\n";
+    cout << "\n=== Tests Plateau ===\n";
 
     Plateau plateau;
     plateau.afficher();
@@ -143,15 +144,142 @@ void test_Plateau(void)
     plateau.placerPion(1, 2, new Pion(BLEU, GRAND));
     plateau.afficher();
 
-    // Tests à implémenter
+    // Tests de victoire
+    JoueurHumain j1("Alice", ROUGE);
+    JoueurHumain j2("Bob", BLEU);
 
-    cout << "=== Test Plateau FIN ===\n";
+    // Joueur1 place des pions pour
+    j1.jouerCoup(&plateau); // Joueur 1 place un pion
+    j1.jouerCoup(&plateau); // Joueur 1 place un pion
+    j1.jouerCoup(&plateau); // Joueur 1 place un pion
+    
+    plateau.afficher();
+    
+    if (plateau.verifierVictoire(j1.getCouleur()))
+        cout << j1.getNom() << " a gagne!\n";
+    else
+        cout << j1.getNom() << " n'a pas encore gagne.\n";
+
+    
+
+    cout << "=== Test Plateau FIN ===\n\n";
 }
+
+
+void test_Plateau()
+{
+    cout << "=== Tests Plateau ===\n";
+
+    // -----------------------------
+    // Test 0 : plateau vide
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Plateau vide\n";
+        p.afficher();
+
+        assert(!p.verifierVictoire(ROUGE) && "Pas de victoire sur plateau vide");
+        assert(!p.verifierVictoire(VERT)  && "Pas de victoire sur plateau vide");
+        assert(!p.verifierVictoire(BLEU)  && "Pas de victoire sur plateau vide");
+        assert(!p.verifierVictoire(JAUNE)&& "Pas de victoire sur plateau vide");
+    }
+
+    // -----------------------------
+    // Test 1 : placements de base + empilement partiel
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Placements de base\n";
+        assert(p.placerPion(0, 0, new Pion(ROUGE, PETIT)));
+        assert(p.placerPion(0, 0, new Pion(ROUGE, MOYEN)));
+        // même taille au même endroit -> doit échouer
+        assert(!p.placerPion(0, 0, new Pion(BLEU, PETIT)));
+
+        // hors plateau -> doit échouer
+        assert(!p.placerPion(-1, 0, new Pion(ROUGE, GRAND)));
+        assert(!p.placerPion(3, 2, new Pion(ROUGE, GRAND)));
+
+        p.afficher();
+
+        assert(!p.verifierVictoire(ROUGE) && "Pas encore de victoire (empilement incomplet)");
+    }
+
+    // -----------------------------
+    // Test 2 : victoire par alignement de 3 cercles identiques
+    // Exemple : 3 PETITS ROUGES sur la ligne y=0
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Victoire - alignement identique (3 PETITS)\n";
+        assert(p.placerPion(0, 0, new Pion(ROUGE, PETIT)));
+        assert(p.placerPion(1, 0, new Pion(ROUGE, PETIT)));
+        assert(p.placerPion(2, 0, new Pion(ROUGE, PETIT)));
+
+        p.afficher();
+
+        assert(p.verifierVictoire(ROUGE) && "ROUGE doit gagner (3 identiques)");
+        assert(!p.verifierVictoire(BLEU) && "BLEU ne doit pas gagner");
+    }
+
+    // -----------------------------
+    // Test 3 : victoire par alignement croissant (PETIT, MOYEN, GRAND)
+    // Exemple : colonne x=1, y=0..2
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Victoire - alignement croissant (P->M->G)\n";
+        assert(p.placerPion(1, 0, new Pion(VERT, PETIT)));
+        assert(p.placerPion(1, 1, new Pion(VERT, MOYEN)));
+        assert(p.placerPion(1, 2, new Pion(VERT, GRAND)));
+
+        p.afficher();
+
+        assert(p.verifierVictoire(VERT) && "VERT doit gagner (croissant)");
+        assert(!p.verifierVictoire(ROUGE) && "ROUGE ne doit pas gagner");
+    }
+
+    // -----------------------------
+    // Test 4 : victoire par empilement complet (PETIT+MOYEN+GRAND dans la même case)
+    // Exemple : case (2,2)
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Victoire - empilement (PETIT+MOYEN+GRAND)\n";
+        assert(p.placerPion(2, 2, new Pion(BLEU, PETIT)));
+        assert(p.placerPion(2, 2, new Pion(BLEU, MOYEN)));
+        assert(p.placerPion(2, 2, new Pion(BLEU, GRAND)));
+
+        p.afficher();
+
+        assert(p.verifierVictoire(BLEU) && "BLEU doit gagner (empilement)");
+        assert(!p.verifierVictoire(JAUNE) && "JAUNE ne doit pas gagner");
+    }
+
+    // -----------------------------
+    // Test 5 (optionnel) : victoire décroissante (GRAND, MOYEN, PETIT)
+    // Exemple : diagonale principale
+    // -----------------------------
+    {
+        Plateau p;
+        cout << "\n[TEST] Victoire - alignement décroissant (G->M->P)\n";
+        assert(p.placerPion(0, 0, new Pion(JAUNE, GRAND)));
+        assert(p.placerPion(1, 1, new Pion(JAUNE, MOYEN)));
+        assert(p.placerPion(2, 2, new Pion(JAUNE, PETIT)));
+
+        p.afficher();
+
+        assert(p.verifierVictoire(JAUNE) && "JAUNE doit gagner (décroissant)");
+    }
+
+    cout << "\nOK: tests Plateau\n";
+    cout << "=== Tests Plateau FIN ===\n";
+}
+
 
 // test de la classe Joueur
 void test_Joueur(void)
 {
-    cout << "=== Tests Joueur ===\n";
+    cout << "\n=== Tests Joueur ===\n";
 
     // 1) Création d'un joueur
     JoueurHumain j("Alice", ROUGE);
@@ -179,7 +307,7 @@ void test_Joueur(void)
     assert(coupJoue && "Le joueur doit pouvoir jouer un coup");
     cout << "OK: jouerCoup\n";
     plateau.afficher();
-    cout << "=== Test Joueur FIN ===\n";
+    cout << "=== Test Joueur FIN ===\n\n";
 }
 
 // test de la classe Otrio

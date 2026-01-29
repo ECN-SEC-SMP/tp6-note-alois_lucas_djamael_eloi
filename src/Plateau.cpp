@@ -1,12 +1,9 @@
 /**
  * @file Plateau.cpp
- * @author Eloi Tourangin (Eloi.Tourangin@eleves.ec-nantes.fr)
+ * @author Eloi Tourangin
  * @brief
  * @version 0.1
  * @date 20-01-2026
- *
- * @copyright Copyright (c) 2026
- *
  */
 
 #include "Plateau.hpp"
@@ -27,124 +24,105 @@ bool Plateau::placerPion(int x, int y, Pion *p)
     return grille[y][x].placerPion(p);
 }
 
-
 Case *Plateau::getCase(int x, int y)
 {
+    if (x < 0 || x >= 3 || y < 0 || y >= 3) return nullptr;
     return &grille[y][x];
 }
 
-bool Plateau::verifierVictoire(Joueur* joueur) const
+bool Plateau::verifierVictoire(Couleur couleur) const
 {
-    return verifierLignes(joueur) || verifierColonnes(joueur) || verifierDiagonales(joueur) || verifierEmpilements(joueur);
+    return verifierLignes(couleur)
+        || verifierColonnes(couleur)
+        || verifierDiagonales(couleur)
+        || verifierEmpilements(couleur);
 }
 
-bool Plateau::verifierLignes(Joueur* joueur) const
-{ 
-    for(int ligne = 0; ligne < 3; ++ligne)
-    {
-            Taille tailles[3];
-            bool valide = true;
-
-            // Pour chaque case de la ligne
-            for (int k = 0; k < 3; ++k)
-            {
-                Pion* pionTrouve = nullptr;
-
-                // Chercher un pion de la bonne couleur dans la case
-                for (int t = PETIT; t <= GRAND; ++t)
-                {
-                    Pion* p = grille[ligne][k].getPion(static_cast<Taille>(t));
-                    if (p && p->getCouleur() == joueur->getCouleur())
-                    {
-                        pionTrouve = p;
-                        break;
-                    }
-                }
-
-                if (!pionTrouve)
-                {
-                    valide = false;
-                    break;
-                }
-
-                tailles[k] = pionTrouve->getTaille();
-            }
-
-            if (!valide)
-                continue;
-
-            // Cas 1 : tailles identiques
-            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
-                return true;
-
-            // Cas 2 : tailles strictement croissantes
-            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
-                return true;
-
-            // Cas 3 : tailles strictement décroissantes
-            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
-                return true;
-    }
-    
-}
-
-bool Plateau::verifierColonnes(Joueur* joueur) const
+bool Plateau::verifierLignes(Couleur couleur) const
 {
-    for(int colonne = 0; colonne < 3; ++colonne)
+    for (int ligne = 0; ligne < 3; ++ligne)
     {
+        Taille tailles[3];
+        bool valide = true;
 
-            Taille tailles[3];
-            bool valide = true;
+        for (int col = 0; col < 3; ++col)
+        {
+            Pion* pionTrouve = nullptr;
 
-            // Pour chaque case de la colonne
-            for (int k = 0; k < 3; ++k)
+            for (int t = PETIT; t <= GRAND; ++t)
             {
-                Pion* pionTrouve = nullptr;
-
-                // Chercher un pion de la bonne couleur dans la case
-                for (int t = PETIT; t <= GRAND; ++t)
+                Pion* p = grille[ligne][col].getPion(static_cast<Taille>(t));
+                if (p && p->getCouleur() == couleur)
                 {
-                    Pion* p = grille[k][colonne].getPion(static_cast<Taille>(t));
-                    if (p && p->getCouleur() == joueur->getCouleur())
-                    {
-                        pionTrouve = p;
-                        break;
-                    }
-                }
-
-                if (!pionTrouve)
-                {
-                    valide = false;
+                    pionTrouve = p;
                     break;
                 }
-
-                tailles[k] = pionTrouve->getTaille();
             }
 
-            if (!valide)
-                continue;
+            if (!pionTrouve)
+            {
+                valide = false;
+                break;
+            }
 
-            // Cas 1 : tailles identiques
-            if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
-                return true;
-
-            // Cas 2 : tailles strictement croissantes
-            if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
-                return true;
-
-            // Cas 3 : tailles strictement décroissantes
-            if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
-                return true;
+            tailles[col] = pionTrouve->getTaille();
         }
+
+        if (!valide) continue;
+
+        // identiques
+        if (tailles[0] == tailles[1] && tailles[1] == tailles[2]) return true;
+        // croissantes
+        if (tailles[0] < tailles[1] && tailles[1] < tailles[2]) return true;
+        // décroissantes
+        if (tailles[0] > tailles[1] && tailles[1] > tailles[2]) return true;
+    }
+
+    return false;
 }
 
-bool Plateau::verifierDiagonales(Joueur* joueur) const
+bool Plateau::verifierColonnes(Couleur couleur) const
 {
-    if (!joueur) return false;
+    for (int col = 0; col < 3; ++col)
+    {
+        Taille tailles[3];
+        bool valide = true;
 
-    Couleur couleur = joueur->getCouleur();
+        for (int ligne = 0; ligne < 3; ++ligne)
+        {
+            Pion* pionTrouve = nullptr;
 
-    // Coordonnées des deux diagonales
+            for (int t = PETIT; t <= GRAND; ++t)
+            {
+                Pion* p = grille[ligne][col].getPion(static_cast<Taille>(t));
+                if (p && p->getCouleur() == couleur)
+                {
+                    pionTrouve = p;
+                    break;
+                }
+            }
+
+            if (!pionTrouve)
+            {
+                valide = false;
+                break;
+            }
+
+            tailles[ligne] = pionTrouve->getTaille();
+        }
+
+        if (!valide) continue;
+
+        if (tailles[0] == tailles[1] && tailles[1] == tailles[2]) return true;
+        if (tailles[0] < tailles[1] && tailles[1] < tailles[2]) return true;
+        if (tailles[0] > tailles[1] && tailles[1] > tailles[2]) return true;
+    }
+
+    return false;
+}
+
+bool Plateau::verifierDiagonales(Couleur couleur) const
+{
     const int diagonales[2][3][2] = {
         { {0,0}, {1,1}, {2,2} },
         { {0,2}, {1,1}, {2,0} }
@@ -155,7 +133,6 @@ bool Plateau::verifierDiagonales(Joueur* joueur) const
         Taille tailles[3];
         bool valide = true;
 
-        // Pour chaque case de la diagonale
         for (int k = 0; k < 3; ++k)
         {
             int x = diagonales[d][k][0];
@@ -163,10 +140,10 @@ bool Plateau::verifierDiagonales(Joueur* joueur) const
 
             Pion* pionTrouve = nullptr;
 
-            // Chercher un pion de la bonne couleur dans la case (peu importe sa taille)
             for (int t = PETIT; t <= GRAND; ++t)
             {
-                Pion* p = grille[x][y].getPion(static_cast<Taille>(t));
+                // ✅ correction : grille[y][x] (ligne, colonne)
+                Pion* p = grille[y][x].getPion(static_cast<Taille>(t));
                 if (p && p->getCouleur() == couleur)
                 {
                     pionTrouve = p;
@@ -183,35 +160,18 @@ bool Plateau::verifierDiagonales(Joueur* joueur) const
             tailles[k] = pionTrouve->getTaille();
         }
 
-        if (!valide)
-            continue;
+        if (!valide) continue;
 
-        // Victoire : tailles identiques
-        if (tailles[0] == tailles[1] && tailles[1] == tailles[2])
-            return true;
-
-        // Victoire : tailles strictement croissantes
-        if (tailles[0] < tailles[1] && tailles[1] < tailles[2])
-            return true;
-
-        // Victoire : tailles strictement décroissantes
-        if (tailles[0] > tailles[1] && tailles[1] > tailles[2])
-            return true;
+        if (tailles[0] == tailles[1] && tailles[1] == tailles[2]) return true;
+        if (tailles[0] < tailles[1] && tailles[1] < tailles[2]) return true;
+        if (tailles[0] > tailles[1] && tailles[1] > tailles[2]) return true;
     }
 
     return false;
 }
 
-
-
-
-
-bool Plateau::verifierEmpilements(Joueur* joueur) const
+bool Plateau::verifierEmpilements(Couleur couleur) const
 {
-    if (!joueur) return false;
-
-    Couleur c = joueur->getCouleur();
-
     for (const auto& ligne : grille)
     {
         for (const auto& casePlateau : ligne)
@@ -220,14 +180,11 @@ bool Plateau::verifierEmpilements(Joueur* joueur) const
             Pion* pMoyen = casePlateau.getPion(MOYEN);
             Pion* pGrand = casePlateau.getPion(GRAND);
 
-            // Il faut les 3 tailles présentes
-            if (!pPetit || !pMoyen || !pGrand)
-                continue;
+            if (!pPetit || !pMoyen || !pGrand) continue;
 
-            // Et toutes de la couleur du joueur
-            if (pPetit->getCouleur() == c &&
-                pMoyen->getCouleur() == c &&
-                pGrand->getCouleur() == c)
+            if (pPetit->getCouleur() == couleur &&
+                pMoyen->getCouleur() == couleur &&
+                pGrand->getCouleur() == couleur)
             {
                 return true;
             }
@@ -244,15 +201,15 @@ static char couleurToChar(Couleur c)
         case ROUGE:  return 'R';
         case VERT:   return 'V';
         case BLEU:   return 'B';
-        case JAUNE:  return 'I';
+        case JAUNE:  return 'J'; // J comme JAUNE (ou 'P' si tu préfères)
         default:     return '?';
     }
 }
 
 void Plateau::afficher() const
 {
-    cout << "\n=== PLATEAU ===\n";
-    cout << "y\\x  0        1        2\n";
+    cout << "\n--PLATEAU--\n";
+    cout << "y\\x    0          1           2\n";
 
     for (int y = 0; y < 3; ++y)
     {
@@ -263,7 +220,6 @@ void Plateau::afficher() const
 
             cout << "[";
 
-            // PETIT
             if (c.getPion(PETIT))
                 cout << "p" << couleurToChar(c.getPion(PETIT)->getCouleur());
             else
@@ -271,7 +227,6 @@ void Plateau::afficher() const
 
             cout << " ";
 
-            // MOYEN
             if (c.getPion(MOYEN))
                 cout << "m" << couleurToChar(c.getPion(MOYEN)->getCouleur());
             else
@@ -279,7 +234,6 @@ void Plateau::afficher() const
 
             cout << " ";
 
-            // GRAND
             if (c.getPion(GRAND))
                 cout << "g" << couleurToChar(c.getPion(GRAND)->getCouleur());
             else
@@ -289,5 +243,5 @@ void Plateau::afficher() const
         }
         cout << '\n';
     }
-    cout << "==============\n";
+    cout << "--------------\n";
 }
