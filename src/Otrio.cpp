@@ -88,9 +88,9 @@ void Otrio::initialiserPartie(int mode)
         joueurs.push_back(make_unique<JoueurHumain>(nom2, VERT));
         joueurs.push_back(make_unique<JoueurHumain>(nom2, JAUNE));
     }
-    else if (mode == 3)
+    else if (mode == 2)
     {
-        // ======= MODE 3 (Version 3 : IA) =======
+        // ======= MODE 2 (Version 3 : IA) =======
         cout << "Initialisation de la partie Otrio Version 3 (IA possible)." << endl;
         cout << "Pour chaque couleur, choisir Humain (H) ou IA (I)." << endl;
 
@@ -135,7 +135,7 @@ void Otrio::lancerBoucleJeu()
         return raw;
     };
 
-    if (mode == 0 || mode == 3)
+    if (mode == 0 || mode == 2)
     {
         while (!estFini() && Affichage::estActif())
         {
@@ -148,8 +148,8 @@ void Otrio::lancerBoucleJeu()
             afficherCouleur(joueurCourant.getCouleur());
             cout << ")." << endl;
 
-            // Si IA (mode 3) : donner le contexte
-            if (mode == 3)
+            // Si IA (mode 2) : donner le contexte
+            if (mode == 2)
             {
                 if (auto* ia = dynamic_cast<JoueurIA*>(&joueurCourant))
                 {
@@ -236,7 +236,7 @@ void Otrio::lancerBoucleJeu()
 
 bool Otrio::passerAuJoueurSuivant()
 {
-    if (mode == 0 || mode == 3)
+    if (mode == 0 || mode == 2)
         joueurCourantIndex = (joueurCourantIndex + 1) % 4;
     else
         joueurCourantIndex = (joueurCourantIndex + 1) % 2;
@@ -246,7 +246,7 @@ bool Otrio::passerAuJoueurSuivant()
 
 bool Otrio::estFini() const
 {
-    if (mode == 0 || mode == 3)
+    if (mode == 0 || mode == 2)
     {
         for (const auto& joueur : joueurs)
         {
