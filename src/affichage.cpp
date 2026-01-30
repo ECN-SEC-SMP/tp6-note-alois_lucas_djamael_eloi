@@ -15,7 +15,7 @@
 #include "Case.hpp"
 #include "Pion.hpp"
 #include "Otrio.hpp"
-#include "JoueurHumain.hpp" // Nécessaire si vous utilisez JoueurHumain dans le cast
+#include "JoueurHumain.hpp"
 #include <sstream>
 
 // Initialisation des membres statiques
