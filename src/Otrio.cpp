@@ -1,197 +1,214 @@
 #include "Otrio.hpp"
 #include "Affichage.hpp"
 #include <limits>
+#include <cctype>
+
+static void afficherCouleur(Couleur c)
+{
+    switch (c) {
+        case ROUGE: cout << "ROUGE"; break;
+        case BLEU:  cout << "BLEU";  break;
+        case VERT:  cout << "VERT";  break;
+        case JAUNE: cout << "JAUNE"; break;
+        default:    cout << "??";    break;
+    }
+}
 
 Otrio::Otrio(void)
 {
-    // Initialisation des 4 joueurs
-    joueurs.push_back(JoueurHumain("Player1", ROUGE));
-    joueurs.push_back(JoueurHumain("Player2", BLEU));
-    joueurs.push_back(JoueurHumain("Player3", VERT));
-    joueurs.push_back(JoueurHumain("Player4", JAUNE));
-
     // Initialisation du plateau
     plateau = Plateau();
 
     // Initialisation de l'index du joueur courant
     joueurCourantIndex = 0;
+    mode = 0;
+
+    // Initialisation des 4 joueurs humains par défaut
+    joueurs.clear();
+    joueurs.push_back(make_unique<JoueurHumain>("Player1", ROUGE));
+    joueurs.push_back(make_unique<JoueurHumain>("Player2", BLEU));
+    joueurs.push_back(make_unique<JoueurHumain>("Player3", VERT));
+    joueurs.push_back(make_unique<JoueurHumain>("Player4", JAUNE));
 }
 
-Otrio::~Otrio()
-{
-}
+Otrio::~Otrio() {}
 
 void Otrio::initialiserPartie(int mode)
 {
-    // Réinitialisation du plateau
     plateau = Plateau();
-
-    // Réinitialisation des joueurs et de l'index du joueur courant
     joueurCourantIndex = 0;
-
     this->mode = mode;
 
-    if(mode == 0){
-
-        //Affichage de l'état initial du jeu
+    if (mode == 0)
+    {
         cout << "Initialisation de la partie Otrio avec 4 joueurs." << endl;
-        
+
+        // si joueurs pas initialisés (sécurité)
+        if (joueurs.size() != 4)
+        {
+            joueurs.clear();
+            joueurs.push_back(make_unique<JoueurHumain>("Player1", ROUGE));
+            joueurs.push_back(make_unique<JoueurHumain>("Player2", BLEU));
+            joueurs.push_back(make_unique<JoueurHumain>("Player3", VERT));
+            joueurs.push_back(make_unique<JoueurHumain>("Player4", JAUNE));
+        }
+
         cout << "Veuillez choisir les noms des 4 joueurs :" << endl;
-        for (auto& joueur : joueurs) {
+        for (auto& joueurPtr : joueurs)
+        {
             string nom;
             cout << "Nom du joueur de couleur ";
-            switch (joueur.getCouleur()) {
-                case ROUGE: cout << "ROUGE"; break;
-                case BLEU: cout << "BLEU"; break;
-                case VERT: cout << "VERT"; break;
-                case JAUNE: cout << "JAUNE"; break;
-            }
+            afficherCouleur(joueurPtr->getCouleur());
             cout << " : ";
             cin >> nom;
-            joueur = JoueurHumain(nom, joueur.getCouleur());
+
+            // on remplace l'objet par un nouveau JoueurHumain (même couleur)
+            Couleur c = joueurPtr->getCouleur();
+            joueurPtr = make_unique<JoueurHumain>(nom, c);
         }
-    }else if(mode == 1){
+    }
+    else if (mode == 1)
+    {
         cout << "Initialisation de la partie Otrio avec 2 joueurs." << endl;
         cout << "Veuillez choisir les noms des 2 joueurs :" << endl;
 
         joueurs.clear();
 
-        for(int i=0; i<2; i++){
-            string nom;
-            cout << "Nom du joueur " << (i+1) << " : ";
-            cin >> nom;
-            if(i == 0){
-                joueurs.push_back(JoueurHumain(nom, ROUGE));
-                joueurs.push_back(JoueurHumain(nom, BLEU));
-            } else {
-                joueurs.push_back(JoueurHumain(nom, VERT));
-                joueurs.push_back(JoueurHumain(nom, JAUNE));
+        string nom1, nom2;
+        cout << "Nom du joueur 1 : ";
+        cin >> nom1;
+        cout << "Nom du joueur 2 : ";
+        cin >> nom2;
+
+        // Joueur 1 : ROUGE + BLEU
+        joueurs.push_back(make_unique<JoueurHumain>(nom1, ROUGE));
+        joueurs.push_back(make_unique<JoueurHumain>(nom1, BLEU));
+
+        // Joueur 2 : VERT + JAUNE
+        joueurs.push_back(make_unique<JoueurHumain>(nom2, VERT));
+        joueurs.push_back(make_unique<JoueurHumain>(nom2, JAUNE));
+    }
+    else if (mode == 3)
+    {
+        // ======= MODE 3 (Version 3 : IA) =======
+        cout << "Initialisation de la partie Otrio Version 3 (IA possible)." << endl;
+        cout << "Pour chaque couleur, choisir Humain (H) ou IA (I)." << endl;
+
+        joueurs.clear();
+        const Couleur couleurs[4] = { ROUGE, BLEU, VERT, JAUNE };
+
+        for (int i = 0; i < 4; ++i)
+        {
+            char type = '\0';
+            while (type != 'H' && type != 'I')
+            {
+                cout << "Joueur " ;
+                afficherCouleur(couleurs[i]);
+                cout << " : Humain (H) ou IA (I) ? ";
+                cin >> type;
+                type = (char)toupper((unsigned char)type);
             }
+
+            string nom;
+            cout << "Nom du joueur ";
+            afficherCouleur(couleurs[i]);
+            cout << " : ";
+            cin >> nom;
+
+            if (type == 'H')
+                joueurs.push_back(make_unique<JoueurHumain>(nom, couleurs[i]));
+            else
+                joueurs.push_back(make_unique<JoueurIA>(nom, couleurs[i]));
         }
     }
 
     cout << "La partie peut commencer !" << endl;
-    
-    // Afficher l'état initial du plateau
     Affichage::afficherPlateau(this);
 }
 
 void Otrio::lancerBoucleJeu()
 {
-    if(mode == 0){
-        while (!estFini() && Affichage::estActif())
-        {
-            // Affichage graphique du plateau
-            Affichage::afficherPlateau(this);
-            
-            afficherEtatJeu(); // Affichage de l'état actuel du jeu avant le coup
-            Joueur& joueurCourant = joueurs[joueurCourantIndex];
-            cout << "C'est au tour de " << joueurCourant.getNom() << " (" ;
-            switch (joueurCourant.getCouleur()) {
-                case ROUGE: cout << "ROUGE"; break;
-                case BLEU: cout << "BLEU"; break;
-                case VERT: cout << "VERT"; break;
-                case JAUNE: cout << "JAUNE"; break;
-            }
-            cout << ")." << endl;
+    auto buildRawPlayers = [&]() {
+        vector<Joueur*> raw;
+        raw.reserve(joueurs.size());
+        for (auto& up : joueurs) raw.push_back(up.get());
+        return raw;
+    };
 
-            // On indique au joueur courant ses pions restants
-            cout << "Pions restants : ";
-            for (const auto& pion : joueurCourant.getPionRestants()) {
-                cout << "(";
-                switch (pion->getCouleur()) {
-                    case ROUGE: cout << "ROUGE"; break;
-                    case BLEU: cout << "BLEU"; break;
-                    case VERT: cout << "VERT"; break;
-                    case JAUNE: cout << "JAUNE"; break;
-                }
-                cout << ", ";
-                switch (pion->getTaille()) {
-                    case PETIT: cout << "PETIT"; break;
-                    case MOYEN: cout << "MOYEN"; break;
-                    case GRAND: cout << "GRAND"; break;
-                }
-                cout << ") ";
-            }
-            cout << endl;
-
-            cout << joueurCourant.getNom() << " peut jouer son coup..." << endl;
-
-            // Demander quel pion jouer et où le placer
-
-            // 1) Choix du pion parmi ceux restants
-            const auto& restants = joueurCourant.getPionRestants();
-            if (restants.empty()) {
-                cout << "Aucun pion restant pour ce joueur." << endl;
-                passerAuJoueurSuivant();
-                continue;
-            }
-
-            // Dire si le coup a été joué avec succès ou non
-            if (!joueurCourant.jouerCoup(&plateau))
-            {
-                cout << "Coup invalide. Veuillez réessayer." << endl;
-                continue; // Le même joueur rejoue
-            }
-
-    
-            passerAuJoueurSuivant();
-        }
-
-        afficherEtatJeu();
-        cout << "La partie est terminée !" << endl;
-        
-        // Fermer l'affichage graphique
-        Affichage::fermer();
-    }
-    else if(mode == 1){
-        // ======= Mode 2 joueurs humains (2 couleurs chacun) =======
-        // joueurCourantIndex : 0 => Humain 1, 1 => Humain 2
-
+    if (mode == 0 || mode == 3)
+    {
         while (!estFini() && Affichage::estActif())
         {
             Affichage::afficherPlateau(this);
             afficherEtatJeu();
 
-            int base = (joueurCourantIndex == 0) ? 0 : 2; // 0/1 pour J1, 2/3 pour J2
+            Joueur& joueurCourant = *joueurs[joueurCourantIndex];
 
-            // Afficher le nom du joueur humain (même nom sur les deux couleurs)
-            cout << "C'est au tour de " << joueurs[base].getNom() << " (2 couleurs)." << endl;
+            cout << "C'est au tour de " << joueurCourant.getNom() << " (";
+            afficherCouleur(joueurCourant.getCouleur());
+            cout << ")." << endl;
 
-            // Choix de la couleur à jouer (donc quel JoueurHumain utiliser)
+            // Si IA (mode 3) : donner le contexte
+            if (mode == 3)
+            {
+                if (auto* ia = dynamic_cast<JoueurIA*>(&joueurCourant))
+                {
+                    auto raw = buildRawPlayers();
+                    ia->setContexte(raw, joueurCourantIndex);
+                }
+            }
+
+            const auto& restants = joueurCourant.getPionRestants();
+            if (restants.empty())
+            {
+                cout << "Aucun pion restant pour ce joueur." << endl;
+                passerAuJoueurSuivant();
+                continue;
+            }
+
+            if (!joueurCourant.jouerCoup(&plateau))
+            {
+                cout << "Coup invalide. Veuillez réessayer." << endl;
+                continue;
+            }
+
+            passerAuJoueurSuivant();
+        }
+
+        afficherEtatJeu();
+        cout << "La partie est terminée !" << endl;
+        Affichage::fermer();
+    }
+    else if (mode == 1)
+    {
+        // ======= Mode 2 joueurs humains (2 couleurs chacun) =======
+        while (!estFini() && Affichage::estActif())
+        {
+            Affichage::afficherPlateau(this);
+            afficherEtatJeu();
+
+            int base = (joueurCourantIndex == 0) ? 0 : 2;
+
+            cout << "C'est au tour de " << joueurs[base]->getNom() << " (2 couleurs)." << endl;
+
             cout << "Choisir la couleur a jouer : " << endl;
-            cout << "  0 -> ";
-            switch (joueurs[base].getCouleur()) {
-                case ROUGE: cout << "ROUGE"; break;
-                case BLEU:  cout << "BLEU";  break;
-                case VERT:  cout << "VERT";  break;
-                case JAUNE: cout << "JAUNE"; break;
-            }
-            cout << endl;
-
-            cout << "  1 -> ";
-            switch (joueurs[base+1].getCouleur()) {
-                case ROUGE: cout << "ROUGE"; break;
-                case BLEU:  cout << "BLEU";  break;
-                case VERT:  cout << "VERT";  break;
-                case JAUNE: cout << "JAUNE"; break;
-            }
-            cout << endl;
+            cout << "  0 -> "; afficherCouleur(joueurs[base]->getCouleur()); cout << endl;
+            cout << "  1 -> "; afficherCouleur(joueurs[base+1]->getCouleur()); cout << endl;
 
             int choix = -1;
             cout << "Votre choix (0/1) : ";
             cin >> choix;
+
             if (!cin || (choix != 0 && choix != 1))
             {
                 cin.clear();
-                cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Choix invalide." << endl;
-                continue; // même humain rejoue
+                continue;
             }
 
-            Joueur& joueurCourant = joueurs[base + choix];
+            Joueur& joueurCourant = *joueurs[base + choix];
 
-            // Optionnel : check main vide
             if (joueurCourant.getPionRestants().empty())
             {
                 cout << "Aucun pion restant pour cette couleur. Choisissez l'autre couleur." << endl;
@@ -199,21 +216,16 @@ void Otrio::lancerBoucleJeu()
             }
 
             cout << "Vous jouez la couleur ";
-            switch (joueurCourant.getCouleur()) {
-                case ROUGE: cout << "ROUGE"; break;
-                case BLEU:  cout << "BLEU";  break;
-                case VERT:  cout << "VERT";  break;
-                case JAUNE: cout << "JAUNE"; break;
-            }
+            afficherCouleur(joueurCourant.getCouleur());
             cout << "." << endl;
 
             if (!joueurCourant.jouerCoup(&plateau))
             {
                 cout << "Coup invalide. Veuillez réessayer." << endl;
-                continue; // même humain rejoue
+                continue;
             }
 
-            passerAuJoueurSuivant(); // en mode 1 => modulo 2
+            passerAuJoueurSuivant(); // modulo 2
         }
 
         afficherEtatJeu();
@@ -224,44 +236,52 @@ void Otrio::lancerBoucleJeu()
 
 bool Otrio::passerAuJoueurSuivant()
 {
-    if (mode == 0) joueurCourantIndex = (joueurCourantIndex + 1) % 4;
-    else          joueurCourantIndex = (joueurCourantIndex + 1) % 2;
+    if (mode == 0 || mode == 3)
+        joueurCourantIndex = (joueurCourantIndex + 1) % 4;
+    else
+        joueurCourantIndex = (joueurCourantIndex + 1) % 2;
+
     return true;
 }
 
 bool Otrio::estFini() const
 {
-    if (mode == 0)
+    if (mode == 0 || mode == 3)
     {
         for (const auto& joueur : joueurs)
         {
-            if (plateau.verifierVictoire(joueur.getCouleur()))
+            if (plateau.verifierVictoire(joueur->getCouleur()))
             {
-                cout << "Le joueur " << joueur.getNom() << " a gagné la partie !" << endl;
+                cout << "Le joueur " << joueur->getNom() << " a gagné la partie !" << endl;
                 return true;
             }
         }
         return false;
     }
-
-    // mode 1 : joueurs[0,1] pour humain 1 ; joueurs[2,3] pour humain 2
-    bool win1 = plateau.verifierVictoire(joueurs[0].getCouleur()) ||
-                plateau.verifierVictoire(joueurs[1].getCouleur());
-    if (win1) {
-        cout << "Le joueur " << joueurs[0].getNom() << " a gagné la partie !" << endl;
+    
+    if (plateau.estPlein())
+    {
+        cout << "Le plateau est plein. Match nul !" << endl;
         return true;
     }
 
-    bool win2 = plateau.verifierVictoire(joueurs[2].getCouleur()) ||
-                plateau.verifierVictoire(joueurs[3].getCouleur());
+    // mode 1 : joueurs[0,1] humain 1 ; joueurs[2,3] humain 2
+    bool win1 = plateau.verifierVictoire(joueurs[0]->getCouleur()) ||
+                plateau.verifierVictoire(joueurs[1]->getCouleur());
+    if (win1) {
+        cout << "Le joueur " << joueurs[0]->getNom() << " a gagné la partie !" << endl;
+        return true;
+    }
+
+    bool win2 = plateau.verifierVictoire(joueurs[2]->getCouleur()) ||
+                plateau.verifierVictoire(joueurs[3]->getCouleur());
     if (win2) {
-        cout << "Le joueur " << joueurs[2].getNom() << " a gagné la partie !" << endl;
+        cout << "Le joueur " << joueurs[2]->getNom() << " a gagné la partie !" << endl;
         return true;
     }
 
     return false;
 }
-
 
 void Otrio::afficherEtatJeu() const
 {
@@ -271,13 +291,8 @@ void Otrio::afficherEtatJeu() const
     cout << "État des joueurs :" << endl;
     for (const auto& joueur : joueurs)
     {
-        cout << "- " << joueur.getNom() << " (";
-        switch (joueur.getCouleur()) {
-            case ROUGE: cout << "ROUGE"; break;
-            case BLEU: cout << "BLEU"; break;
-            case VERT: cout << "VERT"; break;
-            case JAUNE: cout << "JAUNE"; break;
-        }
-        cout << ") a " << joueur.getPionRestants().size() << " pions restants." << endl;
+        cout << "- " << joueur->getNom() << " (";
+        afficherCouleur(joueur->getCouleur());
+        cout << ") a " << joueur->getPionRestants().size() << " pions restants." << endl;
     }
 }

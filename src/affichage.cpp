@@ -366,14 +366,18 @@ void Affichage::afficherPlateau(Otrio *otrio)
         return;
 
     std::vector<Joueur *> joueursPtr;
-    auto &joueursRef = otrio->getJoueurs();
-    for (size_t i = 0; i < joueursRef.size(); ++i)
+
+    const auto &joueursRef = otrio->getJoueurs();   // référence sur le vrai conteneur
+    joueursPtr.reserve(joueursRef.size());
+
+    for (const auto &j : joueursRef)
     {
-        joueursPtr.push_back((Joueur *)&joueursRef[i]);
+        joueursPtr.push_back(j.get());              // récupération du pointeur
     }
 
     afficherPlateau(otrio->getPlateau(), joueursPtr, otrio->getJoueurCourantIndex());
 }
+
 
 bool Affichage::estActif()
 {

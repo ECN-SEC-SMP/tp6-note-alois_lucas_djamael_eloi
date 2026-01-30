@@ -28,10 +28,11 @@ private:
 public:
     Plateau();
     ~Plateau() = default;
+    bool estPlein() const;
 
     bool placerPion(int x, int y, Pion *p);
     Case *getCase(int x, int y);
-
+    const Case* getCase(int x, int y) const;
     bool verifierVictoire(Couleur couleur) const;
 
     void afficher() const;

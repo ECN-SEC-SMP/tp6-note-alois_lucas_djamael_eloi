@@ -29,6 +29,27 @@ Case *Plateau::getCase(int x, int y)
     if (x < 0 || x >= 3 || y < 0 || y >= 3) return nullptr;
     return &grille[y][x];
 }
+const Case* Plateau::getCase(int x, int y) const
+{
+    if (x < 0 || x >= 3 || y < 0 || y >= 3) return nullptr;
+    return &grille[y][x];
+}
+bool Plateau::estPlein() const
+{
+    for (int y = 0; y < 3; ++y)
+    {
+        for (int x = 0; x < 3; ++x)
+        {
+            const Case* c = getCase(x, y);
+            if (!c) return false;
+
+            // Une case est pleine si elle contient PETIT + MOYEN + GRAND
+            if (c->estVide(PETIT) || c->estVide(MOYEN) || c->estVide(GRAND))
+                return false;
+        }
+    }
+    return true;
+}
 
 bool Plateau::verifierVictoire(Couleur couleur) const
 {

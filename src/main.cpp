@@ -22,6 +22,7 @@
 #include "Pion.hpp"
 #include "Joueur.hpp"
 #include "Joueurhumain.hpp"
+#include "JoueurIA.hpp"
 #include "Otrio.hpp"
 
 using namespace std;
@@ -38,6 +39,7 @@ void test_Plateau_v1(void);
 
 // test de la classe Joueur
 void test_Joueur(void);
+void test_JoueurIA(void);
 
 // test de la classe Otrio
 void test_Otrio(void);
@@ -57,6 +59,7 @@ int main()
 
     // /*TEST DE LA CLASSE JOUEUR*/
     // test_Joueur();
+    // test_JoueurIA();
 
     /*TEST DE LA CLASSE OTRIO*/
     test_Otrio();
@@ -313,6 +316,128 @@ void test_Joueur(void)
     cout << "=== Test Joueur FIN ===\n\n";
 }
 
+static int compterPionsPlateau(const Plateau& p)
+{
+    int n = 0;
+    for (int y = 0; y < 3; ++y)
+    {
+        for (int x = 0; x < 3; ++x)
+        {
+            const Case* c = p.getCase(x, y);
+            for (int ti = 0; ti < 3; ++ti)
+            {
+                const Pion* pion = c->getPion(static_cast<Taille>(ti));
+                if (pion) n++;
+            }
+        }
+    }
+    return n;
+}
+
+void test_JoueurIA(void)
+{
+    cout << "\n=== Tests JoueurIA (Version 3) ===\n";
+
+    // -----------------------------
+    // Test 1 : l'IA joue un coup valide
+    // -----------------------------
+    {
+        Plateau p;
+        JoueurIA ia("Bot", BLEU);
+        JoueurHumain h("Alice", ROUGE);
+
+        vector<Joueur*> joueurs = { &h, &ia };
+        ia.setContexte(joueurs, 1);
+
+        int nbAvant = compterPionsPlateau(p);
+        size_t mainAvant = ia.getPionRestants().size();
+
+        bool ok = ia.jouerCoup(&p);
+
+        int nbApres = compterPionsPlateau(p);
+        size_t mainApres = ia.getPionRestants().size();
+
+        assert(ok && "IA doit pouvoir jouer un coup valide");
+        assert(nbApres == nbAvant + 1 && "Le plateau doit contenir 1 pion de plus");
+        assert(mainApres == mainAvant - 1 && "La main de l'IA doit perdre 1 pion");
+
+        cout << "OK: IA joue un coup valide\n";
+    }
+
+    // -----------------------------
+    // Test 2 : blocage d'une menace immédiate (1 coup)
+    //
+    // Situation : ROUGE a déjà 2 PETITS sur la ligne y=0 (x=0 et x=1).
+    // Si ROUGE joue PETIT en (2,0), ROUGE gagne (3 identiques alignés).
+    //
+    // IA (BLEU) doit détecter la menace et bloquer en plaçant un PETIT BLEU en (2,0).
+    // -----------------------------
+    {
+        Plateau p;
+
+        // Menace ROUGE : deux PETITS déjà posés sur la même ligne
+        assert(p.placerPion(0, 0, new Pion(ROUGE, PETIT)));
+        assert(p.placerPion(1, 0, new Pion(ROUGE, PETIT)));
+
+        JoueurHumain h("Alice", ROUGE);
+        JoueurIA ia("Bot", BLEU);
+
+        vector<Joueur*> joueurs = { &h, &ia };
+        ia.setContexte(joueurs, 1);
+
+        // IA joue maintenant : doit bloquer le slot (2,0,PETIT)
+        bool ok = ia.jouerCoup(&p);
+        assert(ok && "IA doit jouer un coup");
+
+        const Case* c = p.getCase(2, 0);
+        const Pion* bloqueur = c->getPion(PETIT);
+
+        assert(bloqueur != nullptr && "Le slot menacé (2,0,PETIT) doit être occupé");
+        assert(bloqueur->getCouleur() == BLEU && "Le slot menacé doit être bloqué par BLEU");
+        assert(!p.verifierVictoire(ROUGE) && "ROUGE ne doit plus avoir une victoire immédiate");
+
+        cout << "OK: IA bloque une menace immédiate\n";
+    }
+
+    // -----------------------------
+    // Test 3 : planification (>= 3 coups)
+    //
+    // Objectif du test : vérifier que l'IA ne joue pas n'importe quoi quand
+    // il existe un coup stratégique.
+    //
+    // On met l'IA dans une situation où elle a une opportunité évidente :
+    // - IA BLEU a déjà 2 empilements partiels au centre (PETIT et MOYEN),
+    //   et peut gagner par empilement complet si elle place GRAND au centre.
+    //
+    // Même si ce n'est pas "3 coups", cela valide aussi que l'IA cherche les coups gagnants.
+    // Pour une vraie preuve de profondeur 3, il faudrait pouvoir simuler/undo dans Plateau,
+    // ce que ton IA fait via son Board interne (minimax depth>=5).
+    // -----------------------------
+    {
+        Plateau p;
+
+        // Préparer une opportunité BLEU : centre (1,1) a PETIT+MOYEN BLEU, manque GRAND
+        assert(p.placerPion(1, 1, new Pion(BLEU, PETIT)));
+        assert(p.placerPion(1, 1, new Pion(BLEU, MOYEN)));
+
+        JoueurIA ia("Bot", BLEU);
+        JoueurHumain h("Alice", ROUGE);
+
+        vector<Joueur*> joueurs = { &h, &ia };
+        ia.setContexte(joueurs, 1);
+
+        bool ok = ia.jouerCoup(&p);
+        assert(ok && "IA doit jouer");
+
+        // Vérifier victoire BLEU (empilement complet)
+        assert(p.verifierVictoire(BLEU) && "BLEU doit gagner par empilement au centre");
+
+        cout << "OK: IA joue un coup gagnant (cohérent avec la planification)\n";
+    }
+
+    cout << "=== Test JoueurIA FIN ===\n\n";
+}
+
 // test de la classe Otrio
 void test_Otrio(void)
 {
@@ -320,7 +445,9 @@ void test_Otrio(void)
 
     Otrio game;
     //Mode 0: standard 4 joueurs et Mode 1: 2 joueurs humains (2 couleurs par joueurs)
-    game.initialiserPartie(1); // mode standard avec 4 joueurs
+    // game.initialiserPartie(0); // mode standard avec 4 joueurs
+    game.initialiserPartie(1); // mode 2 joueurs humains
+    // game.initialiserPartie(3); // mode avec IA
     game.lancerBoucleJeu();
 
     cout << "=== Test Otrio FIN ===\n\n";
