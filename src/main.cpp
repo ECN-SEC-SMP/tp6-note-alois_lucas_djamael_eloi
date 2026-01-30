@@ -319,6 +319,7 @@ void test_Otrio(void)
     cout << "\n=== Tests Otrio ===\n";
 
     Otrio game;
+    //Mode 0: standard 4 joueurs et Mode 1: 2 joueurs humains (2 couleurs par joueurs)
     game.initialiserPartie(1); // mode standard avec 4 joueurs
     game.lancerBoucleJeu();
 
