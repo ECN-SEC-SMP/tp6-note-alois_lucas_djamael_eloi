@@ -27,4 +27,9 @@ public:
     void afficherEtatJeu() const; // en + affichage du plateau et des joueurs dans le terminal
     bool passerAuJoueurSuivant();
     bool estFini() const;
+    
+    // Getters pour l'affichage graphique
+    const Plateau& getPlateau() const { return plateau; }
+    const vector<JoueurHumain>& getJoueurs() const { return joueurs; }
+    int getJoueurCourantIndex() const { return joueurCourantIndex; }
 };

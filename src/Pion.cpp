@@ -17,12 +17,12 @@ Pion::Pion(Couleur c, Taille t)
     this->taille = t;
 }
 
-Couleur Pion::getCouleur()
+Couleur Pion::getCouleur() const
 {
     return this->couleur;
 }
 
-Taille Pion::getTaille()
+Taille Pion::getTaille() const
 {
     return this->taille;
 }

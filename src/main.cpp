@@ -46,17 +46,17 @@ void test_Otrio(void);
 int main()
 {
 
-    /*TEST DE LA CLASSE PION*/
-    test_Pion();
+    // /*TEST DE LA CLASSE PION*/
+    // test_Pion();
 
-    /*TEST DE LA CLASSE CASE*/
-    test_Case();
+    // /*TEST DE LA CLASSE CASE*/
+    // test_Case();
 
-    /*TEST DE LA CLASSE PLATEAU*/
-    test_Plateau();
+    // /*TEST DE LA CLASSE PLATEAU*/
+    // test_Plateau();
 
-    /*TEST DE LA CLASSE JOUEUR*/
-    test_Joueur();
+    // /*TEST DE LA CLASSE JOUEUR*/
+    // test_Joueur();
 
     /*TEST DE LA CLASSE OTRIO*/
     test_Otrio();

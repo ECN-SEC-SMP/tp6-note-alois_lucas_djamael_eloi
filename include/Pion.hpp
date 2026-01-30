@@ -37,9 +37,9 @@ private:
 public:
     Pion(Couleur couleur, Taille taille);
 
-    Couleur getCouleur();
+    Couleur getCouleur() const;
 
-    Taille getTaille();
+    Taille getTaille() const;
     string getTailleStr() const;
     string getCouleurStr() const;
 

@@ -1,4 +1,5 @@
 #include "Otrio.hpp"
+#include "Affichage.hpp"
 
 Otrio::Otrio(void)
 {
@@ -46,12 +47,18 @@ void Otrio::initialiserPartie()
     }
 
     cout << "La partie peut commencer !" << endl;
+    
+    // Afficher l'état initial du plateau
+    Affichage::afficherPlateau(this);
 }
 
 void Otrio::lancerBoucleJeu()
 {
-    while (!estFini())
+    while (!estFini() && Affichage::estActif())
     {
+        // Affichage graphique du plateau
+        Affichage::afficherPlateau(this);
+        
         afficherEtatJeu(); // Affichage de l'état actuel du jeu avant le coup
         Joueur& joueurCourant = joueurs[joueurCourantIndex];
         cout << "C'est au tour de " << joueurCourant.getNom() << " (" ;
@@ -108,6 +115,9 @@ void Otrio::lancerBoucleJeu()
 
     afficherEtatJeu();
     cout << "La partie est terminée !" << endl;
+    
+    // Fermer l'affichage graphique
+    Affichage::fermer();
 }
 
 bool Otrio::passerAuJoueurSuivant()
