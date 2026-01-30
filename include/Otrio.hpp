@@ -16,13 +16,14 @@ protected:
     Plateau plateau;
     vector<JoueurHumain> joueurs;
     int joueurCourantIndex;
+    int mode; // mode de jeu (0 = standard, 1= 2 joueurs, 3= avec IA)
 
 public:
 
     Otrio(void);
     ~Otrio();
 
-    void initialiserPartie();
+    void initialiserPartie(int mode=0);
     void lancerBoucleJeu();
     void afficherEtatJeu() const; // en + affichage du plateau et des joueurs dans le terminal
     bool passerAuJoueurSuivant();

@@ -319,7 +319,7 @@ void test_Otrio(void)
     cout << "\n=== Tests Otrio ===\n";
 
     Otrio game;
-    game.initialiserPartie();
+    game.initialiserPartie(1); // mode standard avec 4 joueurs
     game.lancerBoucleJeu();
 
     cout << "=== Test Otrio FIN ===\n\n";
