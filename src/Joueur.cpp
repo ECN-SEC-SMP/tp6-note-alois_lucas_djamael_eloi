@@ -16,8 +16,8 @@ Joueur::Joueur(string nom, Couleur couleur)
 
 Joueur::~Joueur()
 {
-    for (Pion* p : main) delete p;
-    main.clear();
+    // for (Pion* p : main) delete p;
+    // main.clear();
 }
 
 string Joueur::getNom() const
