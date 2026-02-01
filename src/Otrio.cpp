@@ -126,6 +126,7 @@ void Otrio::initialiserPartie(int mode)
     Affichage::afficherPlateau(this);
 }
 
+
 void Otrio::lancerBoucleJeu()
 {
     auto buildRawPlayers = [&]() {
@@ -135,8 +136,12 @@ void Otrio::lancerBoucleJeu()
         return raw;
     };
 
+    // ======= Modes 0 et 2 : 4 joueurs (humains et/ou IA) =======
     if (mode == 0 || mode == 2)
     {
+        int passesConsecutifs = 0;
+        const int nbJoueursActifs = (int)joueurs.size(); // normalement 4
+
         while (!estFini() && Affichage::estActif())
         {
             Affichage::afficherPlateau(this);
@@ -158,19 +163,50 @@ void Otrio::lancerBoucleJeu()
                 }
             }
 
-            const auto& restants = joueurCourant.getPionRestants();
-            if (restants.empty())
+            // 1) Si le joueur ne peut pas jouer : il passe
+            if (!plateau.joueurPeutJouer(joueurCourant))
             {
-                cout << "Aucun pion restant pour ce joueur." << endl;
+                cout << joueurCourant.getNom() << " ne peut pas jouer -> passe son tour." << endl;
+                passesConsecutifs++;
+
+                if (passesConsecutifs >= nbJoueursActifs)
+                {
+                    cout << "Aucun joueur ne peut jouer sur un tour complet -> match nul !" << endl;
+                    break;
+                }
+
                 passerAuJoueurSuivant();
                 continue;
             }
 
+            // Si on arrive ici : ce joueur peut jouer => reset passes
+            // (on ne le fait qu'après un coup valide, pour éviter de “débloquer” si le joueur échoue)
+            const auto& restants = joueurCourant.getPionRestants();
+            if (restants.empty())
+            {
+                // Main vide = incapable de jouer (normalement joueurPeutJouer aurait déjà renvoyé false)
+                cout << "Aucun pion restant pour ce joueur -> passe." << endl;
+                passesConsecutifs++;
+
+                if (passesConsecutifs >= nbJoueursActifs)
+                {
+                    cout << "Aucun joueur ne peut jouer sur un tour complet -> match nul !" << endl;
+                    break;
+                }
+
+                passerAuJoueurSuivant();
+                continue;
+            }
+
+            // 2) Jouer le coup
             if (!joueurCourant.jouerCoup(&plateau))
             {
                 cout << "Coup invalide. Veuillez réessayer." << endl;
-                continue;
+                continue; // même joueur rejoue (et n’est pas considéré comme “passe”)
             }
+
+            // Coup valide => reset passes
+            passesConsecutifs = 0;
 
             passerAuJoueurSuivant();
         }
@@ -179,21 +215,48 @@ void Otrio::lancerBoucleJeu()
         cout << "La partie est terminée !" << endl;
         Affichage::fermer();
     }
+
+    // ======= Mode 1 : 2 humains, 2 couleurs chacun =======
     else if (mode == 1)
     {
-        // ======= Mode 2 joueurs humains (2 couleurs chacun) =======
+        int passesConsecutifs = 0;
+        const int nbHumains = 2;
+
         while (!estFini() && Affichage::estActif())
         {
             Affichage::afficherPlateau(this);
             afficherEtatJeu();
 
-            int base = (joueurCourantIndex == 0) ? 0 : 2;
+            int base = (joueurCourantIndex == 0) ? 0 : 2; // 0/1 => humain1 ; 2/3 => humain2
 
             cout << "C'est au tour de " << joueurs[base]->getNom() << " (2 couleurs)." << endl;
 
+            bool peut0 = plateau.joueurPeutJouer(*joueurs[base]);
+            bool peut1 = plateau.joueurPeutJouer(*joueurs[base + 1]);
+
+            // 1) Si aucune des deux couleurs ne peut jouer : l'humain passe
+            if (!peut0 && !peut1)
+            {
+                cout << joueurs[base]->getNom() << " ne peut jouer avec aucune couleur -> passe." << endl;
+                passesConsecutifs++;
+
+                if (passesConsecutifs >= nbHumains)
+                {
+                    cout << "Aucun des 2 joueurs ne peut jouer sur un tour complet -> match nul !" << endl;
+                    break;
+                }
+
+                passerAuJoueurSuivant(); // modulo 2
+                continue;
+            }
+
+            // Il peut jouer au moins une couleur => il ne passe pas (pour l’instant)
             cout << "Choisir la couleur a jouer : " << endl;
-            cout << "  0 -> "; afficherCouleur(joueurs[base]->getCouleur()); cout << endl;
-            cout << "  1 -> "; afficherCouleur(joueurs[base+1]->getCouleur()); cout << endl;
+            cout << "  0 -> "; afficherCouleur(joueurs[base]->getCouleur());
+            cout << (peut0 ? "" : " (bloqué)") << endl;
+
+            cout << "  1 -> "; afficherCouleur(joueurs[base+1]->getCouleur());
+            cout << (peut1 ? "" : " (bloqué)") << endl;
 
             int choix = -1;
             cout << "Votre choix (0/1) : ";
@@ -207,13 +270,14 @@ void Otrio::lancerBoucleJeu()
                 continue;
             }
 
-            Joueur& joueurCourant = *joueurs[base + choix];
-
-            if (joueurCourant.getPionRestants().empty())
+            // Refuser si la couleur choisie est bloquée
+            if ((choix == 0 && !peut0) || (choix == 1 && !peut1))
             {
-                cout << "Aucun pion restant pour cette couleur. Choisissez l'autre couleur." << endl;
-                continue;
+                cout << "Cette couleur ne peut pas jouer. Choisissez l'autre." << endl;
+                continue; // même humain rejoue le choix
             }
+
+            Joueur& joueurCourant = *joueurs[base + choix];
 
             cout << "Vous jouez la couleur ";
             afficherCouleur(joueurCourant.getCouleur());
@@ -225,6 +289,9 @@ void Otrio::lancerBoucleJeu()
                 continue;
             }
 
+            // Coup valide => reset passes
+            passesConsecutifs = 0;
+
             passerAuJoueurSuivant(); // modulo 2
         }
 
@@ -233,6 +300,7 @@ void Otrio::lancerBoucleJeu()
         Affichage::fermer();
     }
 }
+
 
 bool Otrio::passerAuJoueurSuivant()
 {

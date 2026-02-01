@@ -12,9 +12,10 @@
 #include <iostream>
 #include "Case.hpp"
 #include "Pion.hpp"
+#include "Joueur.hpp"
 
 using namespace std;
-
+class Joueur;
 class Plateau
 {
 private:
@@ -34,6 +35,9 @@ public:
     Case *getCase(int x, int y);
     const Case* getCase(int x, int y) const;
     bool verifierVictoire(Couleur couleur) const;
+    bool peutPlacer(int x, int y, const Pion* p) const;
+    bool joueurPeutJouer(const Joueur& j) const;
+
 
     void afficher() const;
 };

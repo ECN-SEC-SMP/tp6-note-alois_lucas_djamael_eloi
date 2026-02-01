@@ -266,3 +266,32 @@ void Plateau::afficher() const
     }
     cout << "--------------\n";
 }
+
+bool Plateau::peutPlacer(int x, int y, const Pion* p) const
+{
+    if (!p) return false;
+    if (x < 0 || x >= 3 || y < 0 || y >= 3) return false;
+
+    const Case& c = grille[y][x];
+    return c.estVide(p->getTaille()); // même règle que Case::placerPion (slot libre)
+}
+
+bool Plateau::joueurPeutJouer(const Joueur& j) const
+{
+    const auto pions = j.getPionRestants();
+    if (pions.empty()) return false;
+
+    for (Pion* p : pions)
+    {
+        if (!p) continue;
+        for (int y = 0; y < 3; ++y)
+        {
+            for (int x = 0; x < 3; ++x)
+            {
+                if (peutPlacer(x, y, p))
+                    return true;
+            }
+        }
+    }
+    return false;
+}
