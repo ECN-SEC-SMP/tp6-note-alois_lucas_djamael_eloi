@@ -18,6 +18,7 @@ Lien github : <https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi>
   - [Dépendances, Compilation et Exécution](#dépendances-compilation-et-exécution)
   - [Diagramme des classes](#diagramme-des-classes)
   - [Description des classes](#description-des-classes)
+  - [Diagramme de séquence](#diagramme-de-séquence)
     - [Classe Otrio](#classe-otrio)
       - [Description](#description)
       - [Méthodes](#méthodes)
@@ -35,6 +36,11 @@ Lien github : <https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi>
       - [Description](#description-3)
       - [Méthodes principales](#méthodes-principales-2)
       - [Implémentation](#implémentation)
+      - [Tests de JoueurIA](#tests-de-joueuria)
+        - [Test 1 : l’IA joue un coup valide](#test-1--lia-joue-un-coup-valide)
+        - [Test 2 : blocage d’une menace immédiate](#test-2--blocage-dune-menace-immédiate)
+        - [Test 3 : coup gagnant et planification](#test-3--coup-gagnant-et-planification)
+      - [Gestion des erreurs de JoueurIA](#gestion-des-erreurs-de-joueuria)
     - [Classe Plateau](#classe-plateau)
       - [Description](#description-4)
       - [Méthodes principales](#méthodes-principales-3)
@@ -145,6 +151,8 @@ Elle constitue le point d'entrée logique du jeu.
 | `estFini()` | Vérifie si un joueur a gagné |
 | `passerAuJoueurSuivant()` | Change le joueur courant |
 | `afficherEtatJeu()` | Affiche l'état du plateau et des joueurs |
+| `getMode()` | Retourne le mode de jeu actif |
+| `getJoueurs()` | Retourne la liste polymorphe des joueurs (IA et humains) |
 
 #### Tests de Otrio
 
@@ -237,21 +245,34 @@ L'objectif est de ne pas interrompre la partie à cause d'une erreur utilisateur
 
 #### Description
 
-La classe `JoueurIA` hérite de `Joueur` et représente un joueur automatisé (IA simple).  
-Elle implémente une stratégie de jeu de base pour :
+La classe `JoueurIA` hérite de la classe abstraite `Joueur` et représente un joueur automatisé.
+Elle a été introduite dans la **Version 3** du projet afin de permettre de jouer contre l’ordinateur
+ou de remplacer un ou plusieurs joueurs humains.
 
-- sélectionner automatiquement un pion valide,
-- déterminer une position de placement selon une heuristique simple.
+Cette IA implémente une logique de décision plus avancée qu’une simple sélection aléatoire :
+elle est capable de :
 
-Cette classe permet de jouer contre l'ordinateur ou de tester rapidement le jeu.
+- détecter une **victoire immédiate** pour elle-même,
+- détecter une **menace de victoire adverse** et la bloquer,
+- planifier plusieurs coups à l’avance (profondeur ≥ 3),
+- choisir un coup valide parmi les pions encore disponibles.
+
+La classe `JoueurIA` fonctionne de manière totalement autonome et ne nécessite aucune interaction utilisateur.
+
+---
 
 #### Méthodes principales
 
 | Méthode | Description |
-| --- | --- |
-| `bool jouerCoup(Plateau*)` | Calcule et exécute un coup automatiquement |
-| `Pion choisirPion()` | Sélectionne un pion (ex. premier disponible) |
-| `std::pair<int,int> choisirPosition(Plateau*, const Pion&)` | Détermine les coordonnées de placement |
+|-------|------------|
+| `bool jouerCoup(Plateau* plateau)` | Calcule et exécute automatiquement le meilleur coup possible |
+| `void setContexte(const std::vector<Joueur*>& joueurs, int myIndex)` | Fournit à l’IA le contexte de la partie (ordre des joueurs) |
+| `Board lirePlateau(const Plateau*)` | Construit une représentation interne du plateau |
+| `bool trouverCoupPourGagner(...)` | Recherche un coup gagnant immédiat |
+| `bool trouverCoupPourBloquer(...)` | Recherche un coup bloquant une victoire adverse |
+| `int minimax(...)` | Algorithme de planification multi-joueurs (alpha-beta) |
+
+---
 
 #### Implémentation
 
@@ -265,6 +286,87 @@ Cette implémentation peut être améliorée avec :
 - une heuristique pour privilégier les emplacements défensifs/offensifs,
 - un algorithme minimax ou alpha-beta pour une IA plus forte,
 - priorité aux positions gagnantes ou bloquantes.
+
+
+#### Tests de JoueurIA
+
+La fonction `test_JoueurIA()` permet de valider le bon fonctionnement de la classe `JoueurIA` introduite dans la **Version 3** du projet.  
+Ces tests vérifient que l’IA est capable de jouer de manière autonome, de bloquer une menace immédiate et de saisir une opportunité de victoire.
+
+##### Test 1 : l’IA joue un coup valide
+
+Ce test vérifie le comportement minimal attendu de l’IA :
+
+- création d’un plateau vide,
+- création d’un joueur IA (`Bot`, BLEU) et d’un joueur humain (`Alice`, ROUGE),
+- initialisation du contexte de l’IA (liste des joueurs et index),
+- appel à `ia.jouerCoup(&plateau)`.
+
+Les assertions vérifient que :
+
+- l’IA joue bien un coup valide,
+- le nombre de pions sur le plateau augmente de 1,
+- la main de l’IA diminue de 1 pion.
+
+Ce test garantit que l’IA est capable de jouer correctement un coup légal sans interaction utilisateur.
+
+##### Test 2 : blocage d’une menace immédiate
+
+Ce test valide la capacité de l’IA à **détecter et bloquer une victoire adverse en un coup**.
+
+Situation mise en place :
+
+- le joueur ROUGE a déjà placé deux pions PETIT sur la ligne `y = 0` aux positions `(0,0)` et `(1,0)`,
+- ROUGE gagnerait au prochain tour en plaçant un PETIT en `(2,0)`.
+
+Déroulement du test :
+
+- création d’un joueur humain ROUGE et d’un joueur IA BLEU,
+- initialisation du contexte de l’IA,
+- appel à `ia.jouerCoup(&plateau)`.
+
+Les assertions vérifient que :
+
+- l’IA joue un coup valide,
+- la case `(2,0)` contient désormais un pion PETIT BLEU,
+- la victoire immédiate de ROUGE est empêchée.
+
+Ce test confirme que l’IA sait répondre à une **menace directe** en priorité.
+
+##### Test 3 : coup gagnant et planification
+
+Ce test vise à vérifier que l’IA privilégie un **coup gagnant évident**, cohérent avec une planification sur plusieurs coups.
+
+Situation mise en place :
+
+- au centre du plateau `(1,1)`, BLEU possède déjà un empilement partiel (PETIT + MOYEN),
+- il ne manque qu’un pion GRAND pour obtenir une victoire par empilement complet.
+
+Déroulement du test :
+
+- création d’un joueur IA BLEU et d’un joueur humain ROUGE,
+- initialisation du contexte de l’IA,
+- appel à `ia.jouerCoup(&plateau)`.
+
+Les assertions vérifient que :
+
+- l’IA joue correctement un coup,
+- la victoire de BLEU est détectée après le coup (empilement complet).
+
+Même si ce scénario est gagnant en un coup, il valide indirectement la logique de planification de l’IA, qui s’appuie sur une représentation interne du plateau et une recherche de coups favorables (minimax).
+
+#### Gestion des erreurs de JoueurIA
+
+La classe `JoueurIA` ne lève pas d’exceptions dans le déroulement normal du jeu.  
+Les situations problématiques sont gérées de manière sûre par des contrôles logiques :
+
+- si aucun coup valide n’est possible, `jouerCoup()` retourne `false`,
+- l’IA ne modifie jamais directement le plateau sans validation via `Plateau::placerPion()`,
+- la cohérence entre le plateau et la main de l’IA est maintenue (un pion joué est toujours retiré de la main).
+
+Cette approche permet à `Otrio` de gérer simplement les cas où un joueur (humain ou IA) ne peut pas jouer, sans interrompre la partie.
+
+---
 
 ---
 
