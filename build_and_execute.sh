@@ -1,5 +1,5 @@
 # !/bin/bash
-sudo apt-get install libsfml-dev build-essential cmake -y
+sudo apt install libsfml-dev build-essential cmake -y
 rm -rf ./build
 mkdir -p ./build
 cd ./build
