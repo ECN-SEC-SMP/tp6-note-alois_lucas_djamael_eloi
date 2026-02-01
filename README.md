@@ -7,7 +7,7 @@ SEC 2
 - Djamael Lahamion - <djamael.lahamion@eleves.ec-nantes.fr>
 - Aloïs Guillon - <alois.guillon@eleves.ec-nantes.fr>
 
-Lien github : https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi
+Lien github : <https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi>
 
 ## Table des matières
 
@@ -15,7 +15,7 @@ Lien github : https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi
   - [Table des matières](#table-des-matières)
   - [Organisation du groupe](#organisation-du-groupe)
     - [Répartition initiale](#répartition-initiale)
-  - [Compilation et Exécution](#compilation-et-exécution)
+  - [Compilation et Exécution](#dépendances-compilation-et-exécution)
   - [Diagramme des classes](#diagramme-des-classes)
   - [Description des classes](#description-des-classes)
     - [Classe Otrio](#classe-otrio)
@@ -86,10 +86,10 @@ Elle gère le déroulement global de la partie en orchestrant :
 
 Elle constitue le point d'entrée logique du jeu.
 
-#### Méthodes 
+#### Méthodes
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `initialiserPartie()` | Initialise le plateau et demande les noms des joueurs |
 | `lancerBoucleJeu()` | Lance la boucle principale du jeu |
 | `estFini()` | Vérifie si un joueur a gagné |
@@ -130,7 +130,7 @@ Elle impose également l'implémentation de la méthode `jouerCoup`.
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `virtual bool jouerCoup(Plateau* p) = 0` | Interface de jeu à implémenter |
 | `std::string getNom()` | Retourne le nom du joueur |
 | `Couleur getCouleur()` | Retourne la couleur du joueur |
@@ -154,7 +154,7 @@ Cette classe gère également l'affichage de la main du joueur.
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `bool jouerCoup(Plateau*)` | Gère l'interaction utilisateur pour jouer un coup |
 | `void afficherMain()` | Affiche les pions encore disponibles |
 
@@ -173,6 +173,7 @@ Ce test combine vérifications unitaires (assert) et interaction utilisateur.
 #### Gestion des exceptions de Joueur/JoueurHumain
 
 Dans notre implémentation, `jouerCoup()` gère les erreurs de saisie de manière robuste :
+
 - si l'entrée n'est pas numérique, le flux est nettoyé puis une nouvelle saisie est demandée,
 - si la taille est invalide, l'utilisateur est invité à recommencer,
 - si le pion n'existe pas dans la main, un message est affiché et l'utilisateur recommence,
@@ -197,7 +198,7 @@ Cette classe permet de jouer contre l'ordinateur ou de tester rapidement le jeu.
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `bool jouerCoup(Plateau*)` | Calcule et exécute un coup automatiquement |
 | `Pion choisirPion()` | Sélectionne un pion (ex. premier disponible) |
 | `std::pair<int,int> choisirPosition(Plateau*, const Pion&)` | Détermine les coordonnées de placement |
@@ -233,11 +234,11 @@ La classe est responsable :
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `bool placerPion(int x, int y, const Pion& pion)` | Place un pion sur le plateau si la position est valide |
 | `bool verifierVictoire(Couleur c)` | Vérifie si une couleur satisfait une condition de victoire |
 | `void afficher()` | Affiche l'état du plateau dans le terminal |
-| `Case* getCase(int x, y)` | Retourne un pointeur vers une case du plateau |
+| `Case* getCase(int x, int y)` | Retourne un pointeur vers une case du plateau |
 
 #### Tests de Plateau
 
@@ -297,7 +298,7 @@ Elle assure :
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `bool estVide(Taille t)` | Vrai si pas de pion de cette taille |
 | `bool placerPion(const Pion& p)` | Place un pion selon sa taille si libre |
 | `bool retirerPion(Taille t)` | Retire un pion et retourne succès |
@@ -336,7 +337,7 @@ Les pions sont utilisés par les joueurs pour tenter de remplir les conditions d
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `Couleur getCouleur()` | Retourne la couleur du pion |
 | `Taille getTaille()` | Retourne la taille du pion |
 | `Pion(Couleur c, Taille t)` | Constructeur |
@@ -369,7 +370,7 @@ Cette architecture facilite les évolutions futures (ex. interface graphique, ex
 #### Méthodes principales
 
 | Méthode | Description |
-|--------|-------------|
+| --- | --- |
 | `void afficherPlateau(const Plateau& p)` | Affiche la grille 3×3 avec les pions présents |
 | `void afficherMain(const Joueur& j)` | Affiche les pions restants du joueur |
 | `void afficherMessage(const std::string& msg)` | Affiche un message générique à l'écran |
@@ -390,6 +391,10 @@ Exemple d'améliorations possibles :
 - ajouter des symboles Unicode (♔, ●, ○) pour représenter les pions visuellement,
 - créer des variantes d'affichage (mode ASCII, mode coloré, mode minimaliste).
 
+#### Outils et apprentissage
+
+**Note** : Eloi a utilisé **Gemini** pour maîtriser plus rapidement la bibliothèque **SFML** (Simple and Fast Multimedia Library) lors du développement de l'affichage du plateau. Cette approche a permis d'accélérer la courbe d'apprentissage et d'intégrer des techniques graphiques plus sophistiquées dans le projet.
+
 ---
 
 ## Concepts Clés
@@ -398,7 +403,7 @@ Exemple d'améliorations possibles :
 
 Le projet utilise l'**hérédité** pour structurer les joueurs :
 
-```
+```graph
 Joueur (classe mère abstraite)
   ├── JoueurHumain (classe fille)
   └── JoueurIA (classe fille)
