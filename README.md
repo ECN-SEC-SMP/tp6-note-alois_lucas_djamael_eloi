@@ -113,7 +113,7 @@ cmake --build .
 
 ## Diagramme des classes
 
-![Diagramme des classes](assets/diagramme_classes.svg)
+![Diagramme des classes](assets/diagramme_classes_V2.svg)
 
 ## Description des classes
 
