@@ -15,18 +15,63 @@ Lien github : <https://github.com/ECN-SEC-SMP/tp6-note-alois_lucas_djamael_eloi>
   - [Table des matières](#table-des-matières)
   - [Organisation du groupe](#organisation-du-groupe)
     - [Répartition initiale](#répartition-initiale)
-  - [Compilation et Exécution](#dépendances-compilation-et-exécution)
+  - [Dépendances, Compilation et Exécution](#dépendances-compilation-et-exécution)
   - [Diagramme des classes](#diagramme-des-classes)
   - [Description des classes](#description-des-classes)
     - [Classe Otrio](#classe-otrio)
+      - [Description](#description)
+      - [Méthodes](#méthodes)
+      - [Tests de Otrio](#tests-de-otrio)
+      - [Gestion des Exceptions de Otrio](#gestion-des-exceptions-de-otrio)
     - [Classe Joueur](#classe-joueur)
+      - [Description](#description-1)
+      - [Méthodes principales](#méthodes-principales)
     - [Classe JoueurHumain](#classe-joueurhumain)
+      - [Description](#description-2)
+      - [Méthodes principales](#méthodes-principales-1)
+      - [Tests de Joueur](#tests-de-joueur)
+      - [Gestion des exceptions de Joueur/JoueurHumain](#gestion-des-exceptions-de-joueurjoueurhumain)
     - [Classe JoueurIA](#classe-joueuria)
+      - [Description](#description-3)
+      - [Méthodes principales](#méthodes-principales-2)
+      - [Implémentation](#implémentation)
     - [Classe Plateau](#classe-plateau)
+      - [Description](#description-4)
+      - [Méthodes principales](#méthodes-principales-3)
+      - [Tests de Plateau](#tests-de-plateau)
+        - [`test_Plateau_v1()`](#test_plateau_v1)
+        - [`test_Plateau()`](#test_plateau)
+      - [Gestion des exceptions de Plateau](#gestion-des-exceptions-de-plateau)
     - [Classe Case](#classe-case)
+      - [Description](#description-5)
+      - [Méthodes principales](#méthodes-principales-4)
+      - [Tests de Case](#tests-de-case)
+      - [Gestion des exceptions de Case](#gestion-des-exceptions-de-case)
     - [Classe Pion](#classe-pion)
+      - [Description](#description-6)
+      - [Méthodes principales](#méthodes-principales-5)
+      - [Tests de Pion](#tests-de-pion)
+      - [Gestion des exceptions de Pion](#gestion-des-exceptions-de-pion)
     - [Classe Affichage](#classe-affichage)
+      - [Description](#description-7)
+      - [Méthodes principales](#méthodes-principales-6)
+      - [Implémentation](#implémentation-1)
+      - [Outils et apprentissage](#outils-et-apprentissage)
   - [Concepts Clés](#concepts-clés)
+    - [Hérédité et polymorphisme](#hérédité-et-polymorphisme)
+    - [Concepts C++ utilisés](#concepts-c-utilisés)
+      - [**Pointeurs et références**](#pointeurs-et-références)
+      - [**Conteneurs (std::vector)**](#conteneurs-stdvector)
+      - [**Enums (énumérations)**](#enums-énumérations)
+      - [**Méthodes virtuelles et surcharge**](#méthodes-virtuelles-et-surcharge)
+      - [**Paires (std::pair)**](#paires-stdpair)
+      - [**const et références const**](#const-et-références-const)
+    - [Enums et constantes](#enums-et-constantes)
+    - [Conditions de victoire (règles Otrio)](#conditions-de-victoire-règles-otrio)
+    - [Architecture générale](#architecture-générale)
+    - [Gestion des erreurs](#gestion-des-erreurs)
+    - [Distribution des pions](#distribution-des-pions)
+    - [Organisation du code source](#organisation-du-code-source)
 
 ## Organisation du groupe
 
@@ -39,7 +84,7 @@ Chaque membre du groupe a pris en charge un ensemble cohérent de classes du pro
 
 - **Lucas** : classe `Otrio` et `Case`, gestion de la boucle de jeu et des tours
 - **Eloi** : classes `Plateau` et `Affichage`, affichage du plateau
-- **Djamaël** : classes `Joueur`, `JoueurHumain`, gestion des coups joueurs
+- **Djamaël** : classes `Joueur`, `JoueurHumain`, `JoueurIA`  gestion des coups joueurs
 - **Aloïs** : classe `Pion`, enums (`Couleur`, `Taille`) et tests unitaires
 
 ## Dépendances, Compilation et Exécution
@@ -135,7 +180,7 @@ Elle impose également l'implémentation de la méthode `jouerCoup`.
 | `std::string getNom()` | Retourne le nom du joueur |
 | `Couleur getCouleur()` | Retourne la couleur du joueur |
 | `void retirerPion(const Pion&)` | Retire un pion de la main |
-| `bool hasPion(const Pion&)` | Vérifie si un pion est en main |
+| `void afficherMain()` | Affiche la main du joueur |
 
 ---
 
