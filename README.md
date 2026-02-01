@@ -117,6 +117,11 @@ cmake --build .
 
 ## Description des classes
 
+## Diagramme de séquence
+
+![Diagramme des classes](assets/diagramme_sequence.svg)
+
+
 ### Classe Otrio
 
 #### Description
